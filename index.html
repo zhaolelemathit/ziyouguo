@@ -1,45 +1,18 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新自由民主共和国 - 官方网站</title>
-    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Font Awesome 图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* 自定义字体和滚动条 */
-        body {
-            font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
-            background-color: #f3f4f6;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e3a8a;
-            border-radius: 4px;
-        }
-        .gov-gradient {
-            background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%);
-        }
-        .news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        /* 聊天窗口动画 */
-        .chat-enter {
-            animation: slideUp 0.3s ease-out forwards;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        body { font-family: "Microsoft YaHei", sans-serif; background-color: #f3f4f6; }
+        .gov-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); }
+        .hidden-section { display: none; }
+        /* 动画 */
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
@@ -48,14 +21,10 @@
     <div class="bg-gray-100 text-xs py-1 border-b border-gray-200">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <div class="flex space-x-4 text-gray-600">
-                <span><i class="far fa-calendar-alt mr-1"></i> <span id="current-date"></span></span>
-                <span class="hidden md:inline"><i class="fas fa-map-marker-alt mr-1"></i> 首都：自由城</span>
+                <span id="current-date"></span>
             </div>
-            <div class="flex space-x-3">
-                <a href="#" class="hover:text-blue-800">无障碍浏览</a>
-                <a href="#" class="hover:text-blue-800">English</a>
-                <a href="#" class="hover:text-blue-800">繁体版</a>
-                <a href="#" class="hover:text-blue-800" onclick="toggleAdminMode()">[管理员入口]</a>
+            <div class="flex space-x-3" id="top-auth-links">
+                <!-- 动态生成：登录/注册 或 用户中心/退出 -->
             </div>
         </div>
     </div>
@@ -63,8 +32,7 @@
     <!-- 头部标识区 -->
     <header class="gov-gradient text-white shadow-lg">
         <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center space-x-4 mb-4 md:mb-0">
-                <!-- 国徽占位 -->
+            <div class="flex items-center space-x-4 cursor-pointer" onclick="showPage('home')">
                 <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center text-blue-900 font-bold text-2xl border-4 border-white shadow-inner">
                     <i class="fas fa-landmark"></i>
                 </div>
@@ -73,11 +41,9 @@
                     <p class="text-sm opacity-90 tracking-widest">THE REPUBLIC OF NEW LIBERAL DEMOCRACY</p>
                 </div>
             </div>
-            
-            <!-- 搜索框 -->
-            <div class="relative w-full md:w-96">
-                <input type="text" placeholder="请输入关键词搜索政策、服务..." class="w-full py-2 px-4 rounded-l-md text-gray-800 focus:outline-none">
-                <button class="absolute right-0 top-0 h-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold px-4 rounded-r-md transition">
+            <div class="relative w-full md:w-96 mt-4 md:mt-0">
+                <input type="text" placeholder="搜索政策、服务..." class="w-full py-2 px-4 rounded-l-md text-gray-800 focus:outline-none">
+                <button class="absolute right-0 top-0 h-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold px-4 rounded-r-md">
                     <i class="fas fa-search"></i>
                 </button>
             </div>
@@ -85,483 +51,570 @@
     </header>
 
     <!-- 导航栏 -->
-    <nav class="bg-white shadow-md sticky top-0 z-50">
+    <nav class="bg-white shadow-md sticky top-0 z-40">
         <div class="container mx-auto px-4">
             <ul class="flex flex-wrap justify-center md:justify-start space-x-1 md:space-x-8 text-gray-700 font-medium">
-                <li><a href="#" class="block py-4 px-2 border-b-4 border-blue-800 text-blue-800 hover:bg-gray-50">首页</a></li>
-                <li><a href="#news" class="block py-4 px-2 border-b-4 border-transparent hover:border-blue-800 hover:text-blue-800 transition">政务公开</a></li>
-                <li><a href="#election" class="block py-4 px-2 border-b-4 border-transparent hover:border-blue-800 hover:text-blue-800 transition">公务员选举</a></li>
-                <li><a href="#services" class="block py-4 px-2 border-b-4 border-transparent hover:border-blue-800 hover:text-blue-800 transition">办事服务</a></li>
-                <li><a href="#interaction" class="block py-4 px-2 border-b-4 border-transparent hover:border-blue-800 hover:text-blue-800 transition">互动交流</a></li>
-                <li><a href="#" onclick="openSettings()" class="block py-4 px-2 border-b-4 border-transparent hover:border-blue-800 hover:text-blue-800 transition"><i class="fas fa-cog"></i> 设置</a></li>
+                <li><a href="#" onclick="showPage('home')" class="block py-4 px-2 border-b-4 border-blue-800 text-blue-800 hover:bg-gray-50">首页</a></li>
+                <li><a href="#news" class="block py-4 px-2 hover:text-blue-800">政务公开</a></li>
+                <li><a href="#election" class="block py-4 px-2 hover:text-blue-800">公务员选举</a></li>
+                <li><a href="#" onclick="openChat()" class="block py-4 px-2 hover:text-blue-800">互动交流</a></li>
+                <!-- 管理员入口仅管理员可见 -->
+                <li id="admin-nav-item" class="hidden"><a href="#" onclick="showPage('admin')" class="block py-4 px-2 text-red-600 font-bold hover:bg-red-50"><i class="fas fa-user-shield"></i> 管理后台</a></li>
             </ul>
         </div>
     </nav>
 
-    <!-- 主要内容区 -->
-    <main class="flex-grow container mx-auto px-4 py-8 space-y-12">
+    <!-- 主内容容器 -->
+    <main class="flex-grow container mx-auto px-4 py-8 relative">
 
-        <!-- Banner 区域 -->
-        <section class="relative rounded-xl overflow-hidden shadow-xl h-64 md:h-96 group">
-            <img src="https://picsum.photos/1200/400?random=1" alt="新自由民主共和国首都风景" class="w-full h-full object-cover transition duration-700 group-hover:scale-105">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
-                <div class="text-white">
-                    <h2 class="text-3xl font-bold mb-2">共建美好未来，服务每一位公民</h2>
-                    <p class="opacity-90">最新政策解读与便民服务指南已更新</p>
+        <!-- 1. 首页视图 -->
+        <div id="view-home" class="fade-in space-y-12">
+            <!-- Banner -->
+            <section class="relative rounded-xl overflow-hidden shadow-xl h-64 md:h-96 group">
+                <img src="https://picsum.photos/1200/400?random=1" class="w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
+                    <div class="text-white">
+                        <h2 class="text-3xl font-bold mb-2">共建美好未来，服务每一位公民</h2>
+                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- 官方新闻与公告 -->
-        <section id="news" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- 左侧：头条新闻 -->
-            <div class="md:col-span-2 space-y-6">
-                <div class="flex justify-between items-center border-l-4 border-blue-800 pl-3 mb-4">
-                    <h3 class="text-xl font-bold text-gray-800">官方要闻</h3>
-                    <a href="#" class="text-sm text-gray-500 hover:text-blue-800">更多 <i class="fas fa-angle-right"></i></a>
+            <!-- 新闻与公告 (动态渲染) -->
+            <section id="news-section" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- JS将在此处注入新闻 -->
+            </section>
+
+            <!-- 公务员选举 (动态渲染) -->
+            <section id="election-section" class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gradient-to-r from-red-800 to-red-600 p-4 text-white">
+                    <h3 class="text-xl font-bold"><i class="fas fa-vote-yea mr-2"></i> 公务员公开选拔</h3>
+                </div>
+                <div id="jobs-container" class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- JS将在此处注入职位 -->
+                </div>
+            </section>
+        </div>
+
+        <!-- 2. 注册步骤1：账号设置 -->
+        <div id="view-register-step1" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6 text-blue-900">公民身份注册 (1/2)</h2>
+            <form onsubmit="handleRegStep1(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">设置用户名</label>
+                    <input type="text" id="reg-username" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">设置密码</label>
+                    <input type="password" id="reg-password" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-800 text-white py-2 rounded hover:bg-blue-700">下一步：实名认证</button>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-500">已有账号？ <a href="#" onclick="showPage('login')" class="text-blue-800">去登录</a></p>
+        </div>
+
+        <!-- 3. 注册步骤2：实名认证 -->
+        <div id="view-register-step2" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6 text-blue-900">公民身份注册 (2/2)</h2>
+            <p class="text-sm text-gray-500 mb-4">请完善您的真实身份信息，这将作为您登录的唯一凭证。</p>
+            <form onsubmit="handleRegStep2(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">真实姓名</label>
+                    <input type="text" id="reg-realname" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">身份证号</label>
+                    <input type="text" id="reg-idcard" required pattern="\d{17}[\dXx]" title="请输入18位身份证号" class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-yellow-500 text-blue-900 font-bold py-2 rounded hover:bg-yellow-400">完成注册并登录</button>
+            </form>
+            <button onclick="showPage('register-step1')" class="mt-4 text-sm text-gray-500 underline">返回上一步</button>
+        </div>
+
+        <!-- 4. 登录视图 -->
+        <div id="view-login" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6 text-blue-900">公民登录</h2>
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">用户名</label>
+                    <input type="text" id="login-username" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">密码</label>
+                    <input type="password" id="login-password" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="w-full bg-blue-800 text-white py-2 rounded hover:bg-blue-700">登 录</button>
+            </form>
+            <p class="mt-4 text-center text-sm text-gray-500">没有账号？ <a href="#" onclick="showPage('register-step1')" class="text-blue-800">立即注册</a></p>
+        </div>
+
+        <!-- 5. 管理员后台视图 -->
+        <div id="view-admin" class="hidden-section fade-in">
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6 border-b pb-4">
+                    <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-cogs text-blue-800"></i> 政府管理后台</h2>
+                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded text-sm">管理员：zhaotianle</span>
                 </div>
                 
-                <div class="bg-white p-6 rounded-lg shadow-sm news-card transition duration-300">
-                    <div class="flex flex-col md:flex-row gap-4">
-                        <img src="https://picsum.photos/300/200?random=2" alt="总统发表讲话" class="w-full md:w-48 h-32 object-cover rounded">
-                        <div>
-                            <span class="text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-1 rounded">时政</span>
-                            <h4 class="text-lg font-bold mt-2 hover:text-blue-800 cursor-pointer">总统签署第1024号行政令，推动数字政府建设全面加速</h4>
-                            <p class="text-gray-500 text-sm mt-2 line-clamp-2">旨在提高政府办事效率，实现90%以上政务服务全程网办，让数据多跑路，群众少跑腿。</p>
-                            <div class="mt-3 text-xs text-gray-400">2026-07-15 | 来源：总统府办公厅</div>
-                        </div>
+                <!-- 管理选项卡 -->
+                <div class="flex space-x-4 mb-6 border-b">
+                    <button onclick="switchAdminTab('news')" class="pb-2 border-b-2 border-blue-800 text-blue-800 font-bold">新闻管理</button>
+                    <button onclick="switchAdminTab('jobs')" class="pb-2 border-b-2 border-transparent text-gray-500 hover:text-blue-800">招聘管理</button>
+                    <button onclick="switchAdminTab('citizens')" class="pb-2 border-b-2 border-transparent text-gray-500 hover:text-blue-800">公民信息</button>
+                    <button onclick="switchAdminTab('chat')" class="pb-2 border-b-2 border-transparent text-gray-500 hover:text-blue-800">聊天存档</button>
+                </div>
+
+                <!-- 新闻管理面板 -->
+                <div id="admin-tab-news" class="admin-panel">
+                    <h3 class="font-bold mb-4">发布/修改官方新闻</h3>
+                    <form onsubmit="saveNews(event)" class="grid gap-4 mb-6 bg-gray-50 p-4 rounded">
+                        <input type="text" id="news-title" placeholder="新闻标题" required class="p-2 border rounded">
+                        <textarea id="news-content" placeholder="新闻内容摘要" required class="p-2 border rounded" rows="3"></textarea>
+                        <button type="submit" class="bg-blue-800 text-white px-4 py-2 rounded w-fit">发布新闻</button>
+                    </form>
+                    <div id="admin-news-list" class="space-y-2"></div>
+                </div>
+
+                <!-- 招聘管理面板 -->
+                <div id="admin-tab-jobs" class="admin-panel hidden-section">
+                    <h3 class="font-bold mb-4">发布/修改招聘职位</h3>
+                    <form onsubmit="saveJob(event)" class="grid gap-4 mb-6 bg-gray-50 p-4 rounded">
+                        <input type="text" id="job-title" placeholder="职位名称" required class="p-2 border rounded">
+                        <input type="text" id="job-dept" placeholder="所属部门" required class="p-2 border rounded">
+                        <button type="submit" class="bg-blue-800 text-white px-4 py-2 rounded w-fit">发布职位</button>
+                    </form>
+                    <div id="admin-job-list" class="space-y-2"></div>
+                </div>
+
+                <!-- 公民信息面板 -->
+                <div id="admin-tab-citizens" class="admin-panel hidden-section">
+                    <h3 class="font-bold mb-4">注册公民档案库</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white border">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="py-2 px-4 border">用户名</th>
+                                    <th class="py-2 px-4 border">真实姓名</th>
+                                    <th class="py-2 px-4 border">身份证号</th>
+                                    <th class="py-2 px-4 border">注册时间</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-citizen-list"></tbody>
+                        </table>
                     </div>
                 </div>
 
-                <ul class="space-y-3 bg-white p-6 rounded-lg shadow-sm">
-                    <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <a href="#" class="text-gray-700 hover:text-blue-800 truncate w-3/4"><i class="fas fa-caret-right text-blue-800 mr-2"></i>财政部发布2026年度上半年财政收支情况</a>
-                        <span class="text-gray-400 text-sm">07-14</span>
-                    </li>
-                    <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <a href="#" class="text-gray-700 hover:text-blue-800 truncate w-3/4"><i class="fas fa-caret-right text-blue-800 mr-2"></i>教育部关于调整高等教育学科设置的通知</a>
-                        <span class="text-gray-400 text-sm">07-13</span>
-                    </li>
-                    <li class="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <a href="#" class="text-gray-700 hover:text-blue-800 truncate w-3/4"><i class="fas fa-caret-right text-blue-800 mr-2"></i>交通部：全国高速公路ETC覆盖率已达98%</a>
-                        <span class="text-gray-400 text-sm">07-12</span>
-                    </li>
-                </ul>
-            </div>
-
-            <!-- 右侧：快捷服务与通知 -->
-            <div class="space-y-6">
-                <div class="bg-white p-6 rounded-lg shadow-sm">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-l-4 border-yellow-500 pl-3">便民快捷通道</h3>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button class="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition group">
-                            <i class="fas fa-id-card text-2xl text-blue-800 mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-sm text-gray-700">身份认证</span>
-                        </button>
-                        <button class="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition group">
-                            <i class="fas fa-file-invoice-dollar text-2xl text-blue-800 mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-sm text-gray-700">税务办理</span>
-                        </button>
-                        <button class="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition group">
-                            <i class="fas fa-briefcase-medical text-2xl text-blue-800 mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-sm text-gray-700">医保社保</span>
-                        </button>
-                        <button class="flex flex-col items-center justify-center p-4 bg-gray-50 hover:bg-blue-50 rounded-lg transition group">
-                            <i class="fas fa-gavel text-2xl text-blue-800 mb-2 group-hover:scale-110 transition"></i>
-                            <span class="text-sm text-gray-700">法律咨询</span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
-                    <h3 class="text-lg font-bold text-blue-900 mb-2"><i class="fas fa-bullhorn mr-2"></i>重要通知</h3>
-                    <p class="text-sm text-blue-800 leading-relaxed">
-                        鉴于近期台风季节来临，请沿海地区居民注意防范。政府已启动三级应急响应机制，物资储备充足。
-                    </p>
-                    <button class="mt-3 text-xs bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-700">查看详情</button>
+                <!-- 聊天存档面板 -->
+                <div id="admin-tab-chat" class="admin-panel hidden-section">
+                    <h3 class="font-bold mb-4">全站聊天记录存档</h3>
+                    <div id="admin-chat-log" class="bg-gray-50 p-4 rounded h-96 overflow-y-auto space-y-2 text-sm"></div>
                 </div>
             </div>
-        </section>
-
-        <!-- 公务员选举专题 -->
-        <section id="election" class="bg-white rounded-xl shadow-lg overflow-hidden">
-            <div class="bg-gradient-to-r from-red-800 to-red-600 p-4 text-white flex justify-between items-center">
-                <h3 class="text-xl font-bold"><i class="fas fa-vote-yea mr-2"></i> 2026年度公务员公开选拔选举</h3>
-                <span class="bg-white/20 px-3 py-1 rounded text-sm backdrop-blur-sm">报名截止剩余: 12天</span>
-            </div>
-            <div class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- 职位卡片 1 -->
-                <div class="border rounded-lg p-4 hover:shadow-md transition relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 bg-green-500 text-white text-xs px-2 py-1">热招</div>
-                    <h4 class="font-bold text-lg text-gray-800">数字经济局 - 高级分析师</h4>
-                    <p class="text-sm text-gray-500 mt-1">学历要求：硕士及以上</p>
-                    <p class="text-sm text-gray-500">专业：计算机科学、统计学</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-xs text-gray-400">招录人数: 5人</span>
-                        <button onclick="checkLoginForAction('报名')" class="bg-blue-800 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 transition">立即报名</button>
-                    </div>
-                </div>
-                <!-- 职位卡片 2 -->
-                <div class="border rounded-lg p-4 hover:shadow-md transition">
-                    <h4 class="font-bold text-lg text-gray-800">外交部 - 翻译专员</h4>
-                    <p class="text-sm text-gray-500 mt-1">学历要求：本科及以上</p>
-                    <p class="text-sm text-gray-500">专业：英语、法语、西班牙语</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-xs text-gray-400">招录人数: 12人</span>
-                        <button onclick="checkLoginForAction('报名')" class="bg-blue-800 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 transition">立即报名</button>
-                    </div>
-                </div>
-                <!-- 职位卡片 3 -->
-                <div class="border rounded-lg p-4 hover:shadow-md transition">
-                    <h4 class="font-bold text-lg text-gray-800">环境保护署 - 督察员</h4>
-                    <p class="text-sm text-gray-500 mt-1">学历要求：本科及以上</p>
-                    <p class="text-sm text-gray-500">专业：环境科学、法学</p>
-                    <div class="mt-4 flex justify-between items-center">
-                        <span class="text-xs text-gray-400">招录人数: 8人</span>
-                        <button onclick="checkLoginForAction('报名')" class="bg-blue-800 text-white px-4 py-1.5 rounded text-sm hover:bg-blue-700 transition">立即报名</button>
-                    </div>
-                </div>
-                <!-- 职位卡片 4 -->
-                <div class="border rounded-lg p-4 hover:shadow-md transition bg-gray-50 flex flex-col justify-center items-center text-center">
-                    <i class="fas fa-list-ul text-3xl text-gray-300 mb-2"></i>
-                    <p class="text-gray-500 font-medium">查看全部 128 个职位</p>
-                    <button class="mt-2 text-blue-800 text-sm underline">下载职位表</button>
-                </div>
-            </div>
-        </section>
+        </div>
 
     </main>
 
-    <!-- 底部功能区 -->
-    <footer class="bg-slate-800 text-slate-300 pt-10 pb-6 mt-auto">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 border-b border-slate-700 pb-8">
-                <div>
-                    <h5 class="text-white font-bold mb-4">关于我们</h5>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white">机构职能</a></li>
-                        <li><a href="#" class="hover:text-white">领导介绍</a></li>
-                        <li><a href="#" class="hover:text-white">联系方式</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-white font-bold mb-4">政务服务</h5>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white">个人办事</a></li>
-                        <li><a href="#" class="hover:text-white">企业办事</a></li>
-                        <li><a href="#" class="hover:text-white">部门导航</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-white font-bold mb-4">互动交流</h5>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-white">市长信箱</a></li>
-                        <li><a href="#" class="hover:text-white">在线访谈</a></li>
-                        <li><a href="#" class="hover:text-white">意见征集</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h5 class="text-white font-bold mb-4">关注我们</h5>
-                    <div class="flex space-x-4">
-                        <div class="w-10 h-10 bg-slate-600 rounded flex items-center justify-center hover:bg-blue-600 cursor-pointer"><i class="fab fa-weixin"></i></div>
-                        <div class="w-10 h-10 bg-slate-600 rounded flex items-center justify-center hover:bg-blue-600 cursor-pointer"><i class="fab fa-weibo"></i></div>
-                    </div>
-                    <p class="text-xs mt-4 text-slate-500">官方APP下载</p>
-                </div>
-            </div>
-            
-            <div class="text-center text-xs space-y-2">
-                <p>主办单位：新自由民主共和国中央政府办公厅 | 网站标识码：BM1234567890</p>
-                <p>ICP备案编号：新自民网备字2026001号 | 公安机关备案标识：<i class="fas fa-shield-alt"></i> 京公网安备 11010102000001号</p>
-                <p>版权所有 © 2026 新自由民主共和国政府门户网站 | 建议使用 Chrome 或 Edge 浏览器访问本站</p>
-                <div class="flex justify-center items-center space-x-2 mt-2">
-                    <img src="https://picsum.photos/100/40?grayscale" alt="党政机关标识" class="h-8 opacity-50">
-                    <span class="opacity-50">党政机关网站标识</span>
-                </div>
-            </div>
+    <!-- 底部 -->
+    <footer class="bg-slate-800 text-slate-300 pt-8 pb-4 mt-auto">
+        <div class="container mx-auto px-4 text-center text-xs">
+            <p>主办单位：新自由民主共和国中央政府办公厅 | ICP备案编号：新自民网备字2026001号</p>
+            <p class="mt-2 opacity-50">版权所有 © 2026</p>
         </div>
     </footer>
 
-    <!-- 登录/注册模态框 -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z- backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all scale-100">
-            <div class="flex border-b">
-                <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 py-4 text-center font-bold text-blue-800 border-b-2 border-blue-800 bg-blue-50">登录</button>
-                <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 py-4 text-center font-bold text-gray-500 hover:text-blue-800">注册</button>
-            </div>
-            <div class="p-8">
-                <!-- 登录表单 -->
-                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">用户名/身份证号</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-3 text-gray-400"><i class="fas fa-user"></i></span>
-                            <input type="text" required class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="请输入证件号码">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">密码</label>
-                        <div class="relative">
-                            <span class="absolute left-3 top-3 text-gray-400"><i class="fas fa-lock"></i></span>
-                            <input type="password" required class="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="请输入密码">
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center text-sm">
-                        <label class="flex items-center">
-                            <input type="checkbox" class="mr-2 rounded text-blue-800 focus:ring-blue-500"> 记住我
-                        </label>
-                        <a href="#" class="text-blue-800 hover:underline">忘记密码?</a>
-                    </div>
-                    <button type="submit" class="w-full bg-blue-800 text-white py-2 rounded-lg hover:bg-blue-700 transition font-bold shadow-md">登 录</button>
-                </form>
-
-                <!-- 注册表单 (默认隐藏) -->
-                <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">真实姓名</label>
-                        <input type="text" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">身份证号</label>
-                        <input type="text" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">设置密码</label>
-                        <input type="password" required class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-yellow-500 text-blue-900 py-2 rounded-lg hover:bg-yellow-400 transition font-bold shadow-md">注 册</button>
-                </form>
-            </div>
-            <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
-    </div>
-
-    <!-- 设置模态框 -->
-    <div id="settings-modal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z- backdrop-blur-sm">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg p-6">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h3 class="text-xl font-bold text-gray-800">个人设置</h3>
-                <button onclick="closeModal('settings-modal')" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
-            </div>
-            <div class="space-y-6">
-                <div>
-                    <h4 class="font-medium text-gray-700 mb-2">界面显示</h4>
-                    <div class="flex items-center justify-between bg-gray-50 p-3 rounded">
-                        <span>深色模式</span>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" value="" class="sr-only peer">
-                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-800"></div>
-                        </label>
-                    </div>
-                </div>
-                <div>
-                    <h4 class="font-medium text-gray-700 mb-2">通知偏好</h4>
-                    <div class="space-y-2">
-                        <label class="flex items-center space-x-3">
-                            <input type="checkbox" checked class="w-4 h-4 text-blue-800 rounded focus:ring-blue-500">
-                            <span class="text-gray-600">接收政策变动短信通知</span>
-                        </label>
-                        <label class="flex items-center space-x-3">
-                            <input type="checkbox" class="w-4 h-4 text-blue-800 rounded focus:ring-blue-500">
-                            <span class="text-gray-600">接收选举进度邮件提醒</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="pt-4 border-t">
-                    <button class="w-full bg-blue-800 text-white py-2 rounded hover:bg-blue-700">保存更改</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 聊天组件 -->
+    <!-- 聊天悬浮窗 -->
     <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-        <!-- 聊天窗口 -->
-        <div id="chat-window" class="hidden bg-white w-80 h-96 rounded-xl shadow-2xl flex flex-col mb-4 border border-gray-200 chat-enter">
-            <div class="bg-blue-800 text-white p-4 rounded-t-xl flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span class="font-bold">智能政务助手</span>
-                </div>
-                <button onclick="toggleChat()" class="text-white/80 hover:text-white"><i class="fas fa-minus"></i></button>
+        <div id="chat-window" class="hidden bg-white w-80 h-96 rounded-xl shadow-2xl flex flex-col mb-4 border border-gray-200 fade-in">
+            <div class="bg-blue-800 text-white p-3 rounded-t-xl flex justify-between items-center">
+                <span class="font-bold text-sm">智能政务助手</span>
+                <button onclick="toggleChat()" class="text-white/80"><i class="fas fa-times"></i></button>
             </div>
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
-                <div class="flex items-start space-x-2">
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 text-xs"><i class="fas fa-robot"></i></div>
-                    <div class="bg-white p-2 rounded-lg shadow-sm text-sm text-gray-700 max-w-[80%]">
-                        您好！我是新自由民主共和国智能助手。请问有什么可以帮您？您可以咨询政策、办事流程或选举信息。
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 border-t bg-white">
-                <div class="flex space-x-2">
-                    <input type="text" id="chat-input" placeholder="输入问题..." class="flex-1 border rounded-full px-3 py-1 text-sm focus:outline-none focus:border-blue-500" onkeypress="handleChatKey(event)">
-                    <button onclick="sendMessage()" class="bg-blue-800 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-blue-700"><i class="fas fa-paper-plane text-xs"></i></button>
-                </div>
+            <div id="chat-messages" class="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50 text-sm"></div>
+            <div class="p-2 border-t bg-white flex">
+                <input type="text" id="chat-input" placeholder="输入问题..." class="flex-1 border rounded-l px-2 py-1 text-sm focus:outline-none" onkeypress="if(event.key==='Enter') sendMessage()">
+                <button onclick="sendMessage()" class="bg-blue-800 text-white px-3 rounded-r"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
-        
-        <!-- 悬浮按钮 -->
-        <button onclick="toggleChat()" class="bg-blue-800 hover:bg-blue-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center text-2xl transition transform hover:scale-110">
+        <button onclick="toggleChat()" class="bg-blue-800 hover:bg-blue-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-xl">
             <i class="fas fa-comments"></i>
         </button>
     </div>
 
-    <!-- JavaScript 逻辑 -->
     <script>
-        // 初始化日期
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        // --- 数据初始化与工具函数 ---
+        const DB = {
+            getUsers: () => JSON.parse(localStorage.getItem('nfrd_users')) || [],
+            setUsers: (users) => localStorage.setItem('nfrd_users', JSON.stringify(users)),
+            getNews: () => JSON.parse(localStorage.getItem('nfrd_news')) || [
+                {id: 1, title: '总统签署第1024号行政令，推动数字政府建设', content: '旨在提高政府办事效率...', date: '2026-07-15'},
+                {id: 2, title: '财政部发布2026年度上半年财政收支情况', content: '财政收入稳步增长...', date: '2026-07-14'}
+            ],
+            setNews: (news) => localStorage.setItem('nfrd_news', JSON.stringify(news)),
+            getJobs: () => JSON.parse(localStorage.getItem('nfrd_jobs')) || [
+                {id: 1, title: '数字经济局 - 高级分析师', dept: '数字经济局'},
+                {id: 2, title: '外交部 - 翻译专员', dept: '外交部'}
+            ],
+            setJobs: (jobs) => localStorage.setItem('nfrd_jobs', JSON.stringify(jobs)),
+            getChats: () => JSON.parse(localStorage.getItem('nfrd_chats')) || [],
+            addChat: (msg) => {
+                const chats = DB.getChats();
+                chats.push(msg);
+                localStorage.setItem('nfrd_chats', JSON.stringify(chats));
+            }
+        };
 
-        // 状态管理
-        let isLoggedIn = false;
-        let isAdmin = false;
-        let currentUser = null;
+        let currentUser = JSON.parse(sessionStorage.getItem('nfrd_current_user')) || null;
 
-        // 模态框控制
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-            document.getElementById(id).classList.add('flex');
+        // --- 页面路由控制 ---
+        function showPage(pageId) {
+            // 隐藏所有视图
+            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden-section'));
+            
+            // 显示目标视图
+            const target = document.getElementById(`view-${pageId}`);
+            if(target) target.classList.remove('hidden-section');
+
+            // 特殊处理
+            if(pageId === 'home') renderHome();
+            if(pageId === 'admin') {
+                if(!currentUser || currentUser.username !== 'zhaotianle') {
+                    alert("无权访问：仅限系统管理员登录");
+                    showPage('login');
+                    return;
+                }
+                renderAdminPanel();
+            }
+            updateNav();
         }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            document.getElementById(id).classList.remove('flex');
-        }
-
-        // 登录/注册标签切换
-        function switchAuthTab(tab) {
-            const loginForm = document.getElementById('login-form');
-            const registerForm = document.getElementById('register-form');
-            const loginTab = document.getElementById('tab-login');
-            const registerTab = document.getElementById('tab-register');
-
-            if (tab === 'login') {
-                loginForm.classList.remove('hidden');
-                registerForm.classList.add('hidden');
-                loginTab.classList.add('text-blue-800', 'border-b-2', 'border-blue-800', 'bg-blue-50');
-                loginTab.classList.remove('text-gray-500');
-                registerTab.classList.remove('text-blue-800', 'border-b-2', 'border-blue-800', 'bg-blue-50');
-                registerTab.classList.add('text-gray-500');
+        function updateNav() {
+            const authContainer = document.getElementById('top-auth-links');
+            const adminNav = document.getElementById('admin-nav-item');
+            
+            if (currentUser) {
+                authContainer.innerHTML = `
+                    <span class="text-blue-800 font-bold"><i class="fas fa-user-circle"></i> ${currentUser.realName || currentUser.username}</span>
+                    <a href="#" onclick="logout()" class="hover:text-red-600">退出</a>
+                `;
+                // 如果是管理员，显示后台入口
+                if(currentUser.username === 'zhaotianle') {
+                    adminNav.classList.remove('hidden');
+                } else {
+                    adminNav.classList.add('hidden');
+                }
             } else {
-                loginForm.classList.add('hidden');
-                registerForm.classList.remove('hidden');
-                registerTab.classList.add('text-blue-800', 'border-b-2', 'border-blue-800', 'bg-blue-50');
-                registerTab.classList.remove('text-gray-500');
-                loginTab.classList.remove('text-blue-800', 'border-b-2', 'border-blue-800', 'bg-blue-50');
-                loginTab.classList.add('text-gray-500');
+                authContainer.innerHTML = `
+                    <a href="#" onclick="showPage('login')" class="hover:text-blue-800">登录</a>
+                    <span class="text-gray-300">|</span>
+                    <a href="#" onclick="showPage('register-step1')" class="hover:text-blue-800">注册</a>
+                `;
+                adminNav.classList.add('hidden');
             }
         }
 
-        // 模拟登录
-        function handleLogin(e) {
+        // --- 注册逻辑 ---
+        let tempRegData = {};
+
+        function handleRegStep1(e) {
             e.preventDefault();
-            // 简单模拟验证
-            isLoggedIn = true;
-            currentUser = "公民张三";
-            closeModal('auth-modal');
-            alert("登录成功！欢迎您，" + currentUser);
-            updateUIForLogin();
-        }
-
-        // 模拟注册
-        function handleRegister(e) {
-            e.preventDefault();
-            alert("注册申请已提交，请等待身份核验。");
-            switchAuthTab('login');
-        }
-
-        // 检查登录状态执行操作
-        function checkLoginForAction(action) {
-            if (!isLoggedIn) {
-                alert("请先登录后再进行" + action + "操作。");
-                openModal('auth-modal');
-            } else {
-                alert("正在跳转至" + action + "页面...");
-            }
-        }
-
-        // 更新UI显示登录状态
-        function updateUIForLogin() {
-            // 这里可以动态改变导航栏右侧内容，简化起见仅alert
-        }
-
-        // 管理员模式切换
-        function toggleAdminMode() {
-            if (!isLoggedIn) {
-                alert("请先登录普通账号。");
-                openModal('auth-modal');
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            
+            // 检查用户名是否已存在
+            const users = DB.getUsers();
+            if(users.find(u => u.username === username)) {
+                alert("该用户名已被注册");
                 return;
             }
-            isAdmin = !isAdmin;
-            if (isAdmin) {
-                document.body.style.border = "5px solid red"; // 视觉提示
-                alert("已切换至【管理员视图】。您现在可以看到后台数据面板入口。");
+            // 禁止注册管理员账号
+            if(username === 'zhaotianle') {
+                alert("该用户名受保护，不可注册");
+                return;
+            }
+
+            tempRegData = { username, password };
+            showPage('register-step2');
+        }
+
+        function handleRegStep2(e) {
+            e.preventDefault();
+            const realName = document.getElementById('reg-realname').value;
+            const idCard = document.getElementById('reg-idcard').value;
+
+            const newUser = {
+                ...tempRegData,
+                realName,
+                idCard,
+                role: 'citizen',
+                regTime: new Date().toLocaleString()
+            };
+
+            const users = DB.getUsers();
+            users.push(newUser);
+            DB.setUsers(users);
+
+            // 自动登录
+            sessionStorage.setItem('nfrd_current_user', JSON.stringify(newUser));
+            currentUser = newUser;
+            alert("注册成功！欢迎加入新自由民主共和国。");
+            showPage('home');
+        }
+
+        // --- 登录逻辑 ---
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+
+            // 1. 检查是否是硬编码的管理员
+            if (username === 'zhaotianle' && password === 'ziyouguo1314') {
+                const adminUser = { username: 'zhaotianle', realName: '赵天乐', role: 'admin' };
+                sessionStorage.setItem('nfrd_current_user', JSON.stringify(adminUser));
+                currentUser = adminUser;
+                alert("管理员登录成功");
+                showPage('home'); // 登录后回首页，但导航栏会显示管理入口
+                return;
+            }
+
+            // 2. 检查普通用户
+            const users = DB.getUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                sessionStorage.setItem('nfrd_current_user', JSON.stringify(user));
+                currentUser = user;
+                alert("登录成功");
+                showPage('home');
             } else {
-                document.body.style.border = "none";
-                alert("已退出管理员视图。");
+                alert("用户名或密码错误，或未注册账号");
             }
         }
 
-        // 设置面板
-        function openSettings() {
-            if (!isLoggedIn) {
-                alert("请先登录以访问设置。");
-                openModal('auth-modal');
+        function logout() {
+            sessionStorage.removeItem('nfrd_current_user');
+            currentUser = null;
+            location.reload();
+        }
+
+        // --- 首页渲染 ---
+        function renderHome() {
+            // 渲染新闻
+            const newsList = DB.getNews();
+            const newsContainer = document.getElementById('news-section');
+            newsContainer.innerHTML = `
+                <div class="md:col-span-2 space-y-4">
+                    <div class="flex justify-between items-center border-l-4 border-blue-800 pl-3 mb-2">
+                        <h3 class="text-xl font-bold text-gray-800">官方要闻</h3>
+                    </div>
+                    ${newsList.map(n => `
+                        <div class="bg-white p-4 rounded shadow-sm hover:shadow-md transition">
+                            <h4 class="font-bold text-lg text-blue-900">${n.title}</h4>
+                            <p class="text-gray-600 text-sm mt-1">${n.content}</p>
+                            <div class="text-xs text-gray-400 mt-2">${n.date}</div>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="bg-white p-4 rounded shadow-sm h-fit">
+                    <h3 class="font-bold mb-3 border-l-4 border-yellow-500 pl-2">便民通道</h3>
+                    <div class="grid grid-cols-2 gap-2 text-center text-sm">
+                        <div class="p-2 bg-gray-50 rounded"><i class="fas fa-id-card text-blue-800 block mb-1"></i>身份认证</div>
+                        <div class="p-2 bg-gray-50 rounded"><i class="fas fa-file-invoice text-blue-800 block mb-1"></i>税务办理</div>
+                    </div>
+                </div>
+            `;
+
+            // 渲染职位
+            const jobsList = DB.getJobs();
+            document.getElementById('jobs-container').innerHTML = jobsList.map(j => `
+                <div class="border rounded p-4 hover:shadow-md bg-white">
+                    <h4 class="font-bold text-gray-800">${j.title}</h4>
+                    <p class="text-sm text-gray-500">${j.dept}</p>
+                    <button onclick="checkAuthForAction()" class="mt-3 w-full bg-blue-50 text-blue-800 py-1 rounded text-sm hover:bg-blue-100">查看详情</button>
+                </div>
+            `).join('');
+        }
+
+        function checkAuthForAction() {
+            if(!currentUser) {
+                alert("请先登录以访问详细办事流程");
+                showPage('login');
             } else {
-                openModal('settings-modal');
+                alert("正在进入办事大厅...");
             }
         }
 
-        // 聊天功能
+        // --- 管理员后台逻辑 ---
+        function switchAdminTab(tabName) {
+            document.querySelectorAll('.admin-panel').forEach(el => el.classList.add('hidden-section'));
+            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden-section');
+            
+            // 刷新对应数据
+            if(tabName === 'citizens') renderCitizenList();
+            if(tabName === 'chat') renderChatLog();
+            if(tabName === 'news') renderAdminNewsList();
+            if(tabName === 'jobs') renderAdminJobList();
+        }
+
+        function renderAdminPanel() {
+            switchAdminTab('news'); // 默认显示新闻管理
+        }
+
+        // 1. 新闻管理
+        function saveNews(e) {
+            e.preventDefault();
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+            const news = DB.getNews();
+            news.unshift({
+                id: Date.now(),
+                title,
+                content,
+                date: new Date().toLocaleDateString()
+            });
+            DB.setNews(news);
+            alert("新闻发布成功");
+            e.target.reset();
+            renderAdminNewsList();
+        }
+
+        function renderAdminNewsList() {
+            const news = DB.getNews();
+            document.getElementById('admin-news-list').innerHTML = news.map((n, index) => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded border">
+                    <span class="truncate w-2/3">${n.title}</span>
+                    <button onclick="deleteNews(${index})" class="text-red-500 text-sm hover:underline">删除</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteNews(index) {
+            if(confirm("确定删除这条新闻吗？")) {
+                const news = DB.getNews();
+                news.splice(index, 1);
+                DB.setNews(news);
+                renderAdminNewsList();
+            }
+        }
+
+        // 2. 招聘管理
+        function saveJob(e) {
+            e.preventDefault();
+            const title = document.getElementById('job-title').value;
+            const dept = document.getElementById('job-dept').value;
+            const jobs = DB.getJobs();
+            jobs.unshift({ id: Date.now(), title, dept });
+            DB.setJobs(jobs);
+            alert("职位发布成功");
+            e.target.reset();
+            renderAdminJobList();
+        }
+
+        function renderAdminJobList() {
+            const jobs = DB.getJobs();
+            document.getElementById('admin-job-list').innerHTML = jobs.map((j, index) => `
+                <div class="flex justify-between items-center bg-gray-50 p-2 rounded border">
+                    <span>${j.dept} - ${j.title}</span>
+                    <button onclick="deleteJob(${index})" class="text-red-500 text-sm hover:underline">删除</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteJob(index) {
+            if(confirm("确定删除该职位吗？")) {
+                const jobs = DB.getJobs();
+                jobs.splice(index, 1);
+                DB.setJobs(jobs);
+                renderAdminJobList();
+            }
+        }
+
+        // 3. 公民信息
+        function renderCitizenList() {
+            const users = DB.getUsers();
+            document.getElementById('admin-citizen-list').innerHTML = users.map(u => `
+                <tr class="border-b">
+                    <td class="py-2 px-4">${u.username}</td>
+                    <td class="py-2 px-4">${u.realName}</td>
+                    <td class="py-2 px-4 font-mono text-xs">${u.idCard}</td>
+                    <td class="py-2 px-4 text-xs text-gray-500">${u.regTime}</td>
+                </tr>
+            `).join('');
+        }
+
+        // 4. 聊天存档
+        function renderChatLog() {
+            const chats = DB.getChats();
+            document.getElementById('admin-chat-log').innerHTML = chats.map(c => `
+                <div class="border-b pb-1 mb-1">
+                    <span class="font-bold text-blue-800">[${c.user}]</span> 
+                    <span class="text-gray-400 text-xs">${c.time}</span>: 
+                    ${c.msg}
+                </div>
+            `).join('');
+        }
+
+        // --- 聊天功能 ---
         function toggleChat() {
-            const chatWindow = document.getElementById('chat-window');
-            if (chatWindow.classList.contains('hidden')) {
-                chatWindow.classList.remove('hidden');
-            } else {
-                chatWindow.classList.add('hidden');
-            }
+            const win = document.getElementById('chat-window');
+            win.classList.toggle('hidden');
+            if(!win.classList.contains('hidden')) renderChatHistory();
         }
 
-        function handleChatKey(e) {
-            if (e.key === 'Enter') sendMessage();
+        function openChat() {
+            if(!currentUser) {
+                alert("请先登录后使用聊天功能");
+                showPage('login');
+                return;
+            }
+            const win = document.getElementById('chat-window');
+            win.classList.remove('hidden');
+            renderChatHistory();
+        }
+
+        function renderChatHistory() {
+            if(!currentUser) return;
+            const allChats = DB.getChats();
+            // 简单过滤：只显示当前用户和管理员的对话（这里简化为显示当前用户的所有发言和系统回复）
+            // 为了演示效果，显示所有包含当前用户名的记录
+            const myChats = allChats.filter(c => c.user === currentUser.username || c.user === 'System');
+            
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = myChats.map(c => {
+                if(c.user === 'System') {
+                    return `<div class="flex items-start space-x-2"><div class="bg-blue-100 p-2 rounded text-xs text-blue-900">${c.msg}</div></div>`;
+                } else {
+                    return `<div class="flex items-start justify-end space-x-2"><div class="bg-blue-800 text-white p-2 rounded text-xs">${c.msg}</div></div>`;
+                }
+            }).join('');
+            container.scrollTop = container.scrollHeight;
         }
 
         function sendMessage() {
+            if(!currentUser) {
+                alert("请先登录");
+                toggleChat();
+                showPage('login');
+                return;
+            }
             const input = document.getElementById('chat-input');
             const msg = input.value.trim();
-            if (!msg) return;
+            if(!msg) return;
 
-            const container = document.getElementById('chat-messages');
+            // 保存用户消息
+            DB.addChat({ user: currentUser.username, msg, time: new Date().toLocaleTimeString() });
             
-            // 用户消息
-            const userDiv = document.createElement('div');
-            userDiv.className = "flex items-start justify-end space-x-2";
-            userDiv.innerHTML = `
-                <div class="bg-blue-800 text-white p-2 rounded-lg shadow-sm text-sm max-w-[80%]">${msg}</div>
-                <div class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600 text-xs"><i class="fas fa-user"></i></div>
-            `;
-            container.appendChild(userDiv);
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
-
-            // 模拟回复
+            // 保存系统回复（模拟）
             setTimeout(() => {
-                const botDiv = document.createElement('div');
-                botDiv.className = "flex items-start space-x-2";
-                let reply = "收到您的问题，正在为您查询相关政策...";
-                if (msg.includes("选举")) reply = "公务员选举报名请点击上方‘公务员选举’栏目，截止日期为本月30日。";
-                if (msg.includes("你好")) reply = "您好！很高兴为您服务。";
-                
-                botDiv.innerHTML = `
-                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-800 text-xs"><i class="fas fa-robot"></i></div>
-                    <div class="bg-white p-2 rounded-lg shadow-sm text-sm text-gray-700 max-w-[80%]">${reply}</div>
-                `;
-                container.appendChild(botDiv);
-                container.scrollTop = container.scrollHeight;
-            }, 1000);
+                DB.addChat({ user: 'System', msg: '收到您的问题：“' + msg + '”。工作人员将尽快回复。', time: new Date().toLocaleTimeString() });
+                renderChatHistory();
+            }, 500);
+
+            input.value = '';
+            renderChatHistory();
         }
+
+        // --- 初始化 ---
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+        showPage('home'); // 默认首页
     </script>
 </body>
 </html>
