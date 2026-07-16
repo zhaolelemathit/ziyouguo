@@ -1,620 +1,268 @@
+
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新自由民主共和国 - 官方网站</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入 FontAwesome 图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: "Microsoft YaHei", sans-serif; background-color: #f3f4f6; }
-        .gov-gradient { background: linear-gradient(135deg, #1e3a8a 0%, #172554 100%); }
-        .hidden-section { display: none; }
-        /* 动画 */
-        .fade-in { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
 
-    <!-- 顶部通栏 -->
-    <div class="bg-gray-100 text-xs py-1 border-b border-gray-200">
-        <div class="container mx-auto px-4 flex justify-between items-center">
-            <div class="flex space-x-4 text-gray-600">
-                <span id="current-date"></span>
-            </div>
-            <div class="flex space-x-3" id="top-auth-links">
-                <!-- 动态生成：登录/注册 或 用户中心/退出 -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 头部标识区 -->
-    <header class="gov-gradient text-white shadow-lg">
-        <div class="container mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
-            <div class="flex items-center space-x-4 cursor-pointer" onclick="showPage('home')">
-                <div class="w-16 h-16 bg-yellow-500 rounded-full flex items-center justify-center text-blue-900 font-bold text-2xl border-4 border-white shadow-inner">
-                    <i class="fas fa-landmark"></i>
-                </div>
+    <!-- 顶部导航栏 -->
+    <header id="main-header">
+        <div class="container header-content">
+            <div class="logo-area">
+                <i class="fa-solid fa-landmark"></i>
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold tracking-wider">新自由民主共和国</h1>
-                    <p class="text-sm opacity-90 tracking-widest">THE REPUBLIC OF NEW LIBERAL DEMOCRACY</p>
+                    <h1>新自由民主共和国</h1>
+                    <p>The Official Website of the New Liberal Democratic Republic</p>
                 </div>
             </div>
-            <div class="relative w-full md:w-96 mt-4 md:mt-0">
-                <input type="text" placeholder="搜索政策、服务..." class="w-full py-2 px-4 rounded-l-md text-gray-800 focus:outline-none">
-                <button class="absolute right-0 top-0 h-full bg-yellow-500 hover:bg-yellow-400 text-blue-900 font-bold px-4 rounded-r-md">
-                    <i class="fas fa-search"></i>
-                </button>
+            <nav id="nav-menu">
+                <!-- 动态生成菜单 -->
+            </nav>
+            <div class="user-status" id="user-status">
+                <!-- 动态显示登录状态 -->
             </div>
         </div>
     </header>
 
-    <!-- 导航栏 -->
-    <nav class="bg-white shadow-md sticky top-0 z-40">
-        <div class="container mx-auto px-4">
-            <ul class="flex flex-wrap justify-center md:justify-start space-x-1 md:space-x-8 text-gray-700 font-medium">
-                <li><a href="#" onclick="showPage('home')" class="block py-4 px-2 border-b-4 border-blue-800 text-blue-800 hover:bg-gray-50">首页</a></li>
-                <li><a href="#news" class="block py-4 px-2 hover:text-blue-800">政务公开</a></li>
-                <li><a href="#election" class="block py-4 px-2 hover:text-blue-800">公务员选举</a></li>
-                <li><a href="#" onclick="openChat()" class="block py-4 px-2 hover:text-blue-800">互动交流</a></li>
-                <!-- 管理员入口仅管理员可见 -->
-                <li id="admin-nav-item" class="hidden"><a href="#" onclick="showPage('admin')" class="block py-4 px-2 text-red-600 font-bold hover:bg-red-50"><i class="fas fa-user-shield"></i> 管理后台</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- 主内容容器 -->
-    <main class="flex-grow container mx-auto px-4 py-8 relative">
-
-        <!-- 1. 首页视图 -->
-        <div id="view-home" class="fade-in space-y-12">
-            <!-- Banner -->
-            <section class="relative rounded-xl overflow-hidden shadow-xl h-64 md:h-96 group">
-                <img src="https://picsum.photos/1200/400?random=1" class="w-full h-full object-cover">
-                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-8">
-                    <div class="text-white">
-                        <h2 class="text-3xl font-bold mb-2">共建美好未来，服务每一位公民</h2>
+    <!-- 主要内容区域 -->
+    <main class="container main-content">
+        
+        <!-- 1. 首页 / 官方新闻 -->
+        <section id="page-home" class="page-section active">
+            <div class="hero-banner">
+                <h2>欢迎访问新自由民主共和国政府门户网站</h2>
+                <p>服务人民 · 公正廉洁 · 高效透明</p>
+            </div>
+            
+            <div class="news-grid">
+                <div class="news-main">
+                    <h3><i class="fa-solid fa-newspaper"></i> 官方要闻</h3>
+                    <div id="news-list-container">
+                        <!-- 新闻列表动态加载 -->
                     </div>
                 </div>
-            </section>
-
-            <!-- 新闻与公告 (动态渲染) -->
-            <section id="news-section" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- JS将在此处注入新闻 -->
-            </section>
-
-            <!-- 公务员选举 (动态渲染) -->
-            <section id="election-section" class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="bg-gradient-to-r from-red-800 to-red-600 p-4 text-white">
-                    <h3 class="text-xl font-bold"><i class="fas fa-vote-yea mr-2"></i> 公务员公开选拔</h3>
-                </div>
-                <div id="jobs-container" class="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- JS将在此处注入职位 -->
-                </div>
-            </section>
-        </div>
-
-        <!-- 2. 注册步骤1：账号设置 -->
-        <div id="view-register-step1" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg fade-in">
-            <h2 class="text-2xl font-bold text-center mb-6 text-blue-900">公民身份注册 (1/2)</h2>
-            <form onsubmit="handleRegStep1(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">设置用户名</label>
-                    <input type="text" id="reg-username" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">设置密码</label>
-                    <input type="password" id="reg-password" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-blue-800 text-white py-2 rounded hover:bg-blue-700">下一步：实名认证</button>
-            </form>
-            <p class="mt-4 text-center text-sm text-gray-500">已有账号？ <a href="#" onclick="showPage('login')" class="text-blue-800">去登录</a></p>
-        </div>
-
-        <!-- 3. 注册步骤2：实名认证 -->
-        <div id="view-register-step2" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg fade-in">
-            <h2 class="text-2xl font-bold text-center mb-6 text-blue-900">公民身份注册 (2/2)</h2>
-            <p class="text-sm text-gray-500 mb-4">请完善您的真实身份信息，这将作为您登录的唯一凭证。</p>
-            <form onsubmit="handleRegStep2(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">真实姓名</label>
-                    <input type="text" id="reg-realname" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">身份证号</label>
-                    <input type="text" id="reg-idcard" required pattern="\d{17}[\dXx]" title="请输入18位身份证号" class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-yellow-500 text-blue-900 font-bold py-2 rounded hover:bg-yellow-400">完成注册并登录</button>
-            </form>
-            <button onclick="showPage('register-step1')" class="mt-4 text-sm text-gray-500 underline">返回上一步</button>
-        </div>
-
-        <!-- 4. 登录视图 -->
-        <div id="view-login" class="hidden-section max-w-md mx-auto bg-white p-8 rounded-xl shadow-lg fade-in">
-            <h2 class="text-2xl font-bold text-center mb-6 text-blue-900">公民登录</h2>
-            <form onsubmit="handleLogin(event)" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">用户名</label>
-                    <input type="text" id="login-username" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-700">密码</label>
-                    <input type="password" id="login-password" required class="w-full mt-1 p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-blue-800 text-white py-2 rounded hover:bg-blue-700">登 录</button>
-            </form>
-            <p class="mt-4 text-center text-sm text-gray-500">没有账号？ <a href="#" onclick="showPage('register-step1')" class="text-blue-800">立即注册</a></p>
-        </div>
-
-        <!-- 5. 管理员后台视图 -->
-        <div id="view-admin" class="hidden-section fade-in">
-            <div class="bg-white rounded-xl shadow-lg p-6">
-                <div class="flex justify-between items-center mb-6 border-b pb-4">
-                    <h2 class="text-2xl font-bold text-gray-800"><i class="fas fa-cogs text-blue-800"></i> 政府管理后台</h2>
-                    <span class="bg-red-100 text-red-800 px-3 py-1 rounded text-sm">管理员：zhaotianle</span>
-                </div>
-                
-                <!-- 管理选项卡 -->
-                <div class="flex space-x-4 mb-6 border-b">
-                    <button onclick="switchAdminTab('news')" class="pb-2 border-b-2 border-blue-800 text-blue-800 font-bold">新闻管理</button>
-                    <button onclick="switchAdminTab('jobs')" class="pb-2 border-b-2 border-transparent text-gray-500 hover:text-blue-800">招聘管理</button>
-                    <button onclick="switchAdminTab('citizens')" class="pb-2 border-b-2 border-transparent text-gray-500 hover:text-blue-800">公民信息</button>
-                    <button onclick="switchAdminTab('chat')" class="pb-2 border-b-2 border-transparent text-gray-500 hover:text-blue-800">聊天存档</button>
-                </div>
-
-                <!-- 新闻管理面板 -->
-                <div id="admin-tab-news" class="admin-panel">
-                    <h3 class="font-bold mb-4">发布/修改官方新闻</h3>
-                    <form onsubmit="saveNews(event)" class="grid gap-4 mb-6 bg-gray-50 p-4 rounded">
-                        <input type="text" id="news-title" placeholder="新闻标题" required class="p-2 border rounded">
-                        <textarea id="news-content" placeholder="新闻内容摘要" required class="p-2 border rounded" rows="3"></textarea>
-                        <button type="submit" class="bg-blue-800 text-white px-4 py-2 rounded w-fit">发布新闻</button>
-                    </form>
-                    <div id="admin-news-list" class="space-y-2"></div>
-                </div>
-
-                <!-- 招聘管理面板 -->
-                <div id="admin-tab-jobs" class="admin-panel hidden-section">
-                    <h3 class="font-bold mb-4">发布/修改招聘职位</h3>
-                    <form onsubmit="saveJob(event)" class="grid gap-4 mb-6 bg-gray-50 p-4 rounded">
-                        <input type="text" id="job-title" placeholder="职位名称" required class="p-2 border rounded">
-                        <input type="text" id="job-dept" placeholder="所属部门" required class="p-2 border rounded">
-                        <button type="submit" class="bg-blue-800 text-white px-4 py-2 rounded w-fit">发布职位</button>
-                    </form>
-                    <div id="admin-job-list" class="space-y-2"></div>
-                </div>
-
-                <!-- 公民信息面板 -->
-                <div id="admin-tab-citizens" class="admin-panel hidden-section">
-                    <h3 class="font-bold mb-4">注册公民档案库</h3>
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white border">
-                            <thead class="bg-gray-100">
-                                <tr>
-                                    <th class="py-2 px-4 border">用户名</th>
-                                    <th class="py-2 px-4 border">真实姓名</th>
-                                    <th class="py-2 px-4 border">身份证号</th>
-                                    <th class="py-2 px-4 border">注册时间</th>
-                                </tr>
-                            </thead>
-                            <tbody id="admin-citizen-list"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- 聊天存档面板 -->
-                <div id="admin-tab-chat" class="admin-panel hidden-section">
-                    <h3 class="font-bold mb-4">全站聊天记录存档</h3>
-                    <div id="admin-chat-log" class="bg-gray-50 p-4 rounded h-96 overflow-y-auto space-y-2 text-sm"></div>
+                <div class="news-sidebar">
+                    <h3><i class="fa-solid fa-bullhorn"></i> 通知公告</h3>
+                    <ul id="notice-list">
+                        <li>关于公务员选举结果公示的通知</li>
+                        <li>新一代身份证系统上线公告</li>
+                        <li>国庆假期安排通知</li>
+                    </ul>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- 2. 登录页面 -->
+        <section id="page-login" class="page-section">
+            <div class="auth-box">
+                <h2>公民登录</h2>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label>用户名</label>
+                        <input type="text" id="login-username" required placeholder="请输入注册用户名">
+                    </div>
+                    <div class="form-group">
+                        <label>密码</label>
+                        <input type="password" id="login-password" required placeholder="请输入密码">
+                    </div>
+                    <button type="submit" class="btn-primary">登录</button>
+                    <p class="switch-auth">还没有账号？ <a href="#" onclick="app.navigate('register')">去注册</a></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. 注册页面 (第一步) -->
+        <section id="page-register" class="page-section">
+            <div class="auth-box">
+                <h2>公民注册</h2>
+                <form id="register-form-step1">
+                    <div class="form-group">
+                        <label>设置用户名</label>
+                        <input type="text" id="reg-username" required placeholder="用于登录的唯一标识">
+                    </div>
+                    <div class="form-group">
+                        <label>设置密码</label>
+                        <input type="password" id="reg-password" required placeholder="请设置安全密码">
+                    </div>
+                    <button type="submit" class="btn-primary">下一步：完善身份信息</button>
+                    <p class="switch-auth">已有账号？ <a href="#" onclick="app.navigate('login')">去登录</a></p>
+                </form>
+            </div>
+        </section>
+
+        <!-- 4. 实名认证页面 (注册第二步) -->
+        <section id="page-identity" class="page-section">
+            <div class="auth-box">
+                <h2>实名认证</h2>
+                <p class="hint">为了保障公民权益，请填写真实身份信息</p>
+                <form id="identity-form">
+                    <div class="form-group">
+                        <label>真实姓名</label>
+                        <input type="text" id="id-realname" required placeholder="身份证上的姓名">
+                    </div>
+                    <div class="form-group">
+                        <label>身份证号码</label>
+                        <input type="text" id="id-number" required placeholder="18位身份证号">
+                    </div>
+                    <div class="form-group">
+                        <label>居住地址</label>
+                        <input type="text" id="id-address" required placeholder="详细居住地址">
+                    </div>
+                    <button type="submit" class="btn-primary">提交认证并完成注册</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 5. 公务员选举 -->
+        <section id="page-election" class="page-section">
+            <h2><i class="fa-solid fa-check-to-slot"></i> 公务员在线选举大厅</h2>
+            <div class="election-container" id="election-list">
+                <!-- 候选人动态加载 -->
+            </div>
+        </section>
+
+        <!-- 6. 公民广场 (查看其他用户) -->
+        <section id="page-citizens" class="page-section">
+            <h2><i class="fa-solid fa-users"></i> 公民广场</h2>
+            <div class="search-bar">
+                <input type="text" id="citizen-search" placeholder="搜索公民姓名或用户名...">
+            </div>
+            <div class="citizen-grid" id="citizen-list">
+                <!-- 用户卡片动态加载 -->
+            </div>
+        </section>
+
+        <!-- 7. 聊天室 -->
+        <section id="page-chat" class="page-section">
+            <div class="chat-layout">
+                <div class="chat-sidebar">
+                    <h3>会话列表</h3>
+                    <ul id="chat-user-list">
+                        <li class="active" onclick="app.loadChat('public')"><i class="fa-solid fa-globe"></i> 公共频道</li>
+                        <!-- 私人会话动态添加 -->
+                    </ul>
+                </div>
+                <div class="chat-main">
+                    <div class="chat-header" id="chat-header">公共频道</div>
+                    <div class="chat-messages" id="chat-messages">
+                        <!-- 消息记录 -->
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chat-input" placeholder="输入消息... (@用户名 可提及)">
+                        <button onclick="app.sendMessage()" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> 发送</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. 个人中心/设置 -->
+        <section id="page-profile" class="page-section">
+            <h2>个人中心</h2>
+            <div class="profile-card">
+                <div class="profile-info">
+                    <img src="https://picsum.photos/100/100?random=user" alt="用户头像" class="avatar">
+                    <div>
+                        <h3 id="profile-name">--</h3>
+                        <p id="profile-role">普通公民</p>
+                    </div>
+                </div>
+                <div class="profile-details">
+                    <p><strong>身份证号:</strong> <span id="profile-id">--</span></p>
+                    <p><strong>地址:</strong> <span id="profile-address">--</span></p>
+                </div>
+                <div class="profile-actions">
+                    <button onclick="app.logout()" class="btn-danger">退出登录</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. 管理员后台 (仅管理员可见) -->
+        <section id="page-admin" class="page-section">
+            <h2><i class="fa-solid fa-shield-halved"></i> 政务管理后台</h2>
+            
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="app.switchAdminTab('news')">新闻管理</button>
+                <button class="tab-btn" onclick="app.switchAdminTab('election')">选举管理</button>
+                <button class="tab-btn" onclick="app.switchAdminTab('users')">公民信息管理</button>
+            </div>
+
+            <!-- 管理员：新闻管理 -->
+            <div id="admin-tab-news" class="admin-panel">
+                <h3>发布/编辑新闻</h3>
+                <form id="admin-news-form">
+                    <input type="hidden" id="edit-news-id">
+                    <div class="form-group">
+                        <label>标题</label>
+                        <input type="text" id="news-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>内容</label>
+                        <textarea id="news-content" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">发布/更新新闻</button>
+                    <button type="button" onclick="app.resetNewsForm()" class="btn-secondary">重置</button>
+                </form>
+                <hr>
+                <h4>现有新闻列表</h4>
+                <ul id="admin-news-list" class="data-list"></ul>
+            </div>
+
+            <!-- 管理员：选举管理 -->
+            <div id="admin-tab-election" class="admin-panel" style="display:none;">
+                <h3>添加候选人</h3>
+                <form id="admin-election-form">
+                    <div class="form-group">
+                        <label>候选人姓名</label>
+                        <input type="text" id="cand-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>竞选职位</label>
+                        <input type="text" id="cand-position" required>
+                    </div>
+                    <div class="form-group">
+                        <label>简介</label>
+                        <textarea id="cand-desc" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">添加候选人</button>
+                </form>
+                <hr>
+                <h4>候选人列表</h4>
+                <ul id="admin-cand-list" class="data-list"></ul>
+            </div>
+
+            <!-- 管理员：用户管理 -->
+            <div id="admin-tab-users" class="admin-panel" style="display:none;">
+                <h3>注册公民信息总览</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>真实姓名</th>
+                            <th>身份证号</th>
+                            <th>地址</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-user-table"></tbody>
+                </table>
+            </div>
+        </section>
 
     </main>
 
-    <!-- 底部 -->
-    <footer class="bg-slate-800 text-slate-300 pt-8 pb-4 mt-auto">
-        <div class="container mx-auto px-4 text-center text-xs">
-            <p>主办单位：新自由民主共和国中央政府办公厅 | ICP备案编号：新自民网备字2026001号</p>
-            <p class="mt-2 opacity-50">版权所有 © 2026</p>
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 新自由民主共和国政府版权所有 | 网站标识码: NLD-2026-001 | ICP备案号: 京ICP备20260000号</p>
+            <p>技术支持：国家信息中心 | 建议使用 Chrome 或 Edge 浏览器访问本站</p>
         </div>
     </footer>
 
-    <!-- 聊天悬浮窗 -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-        <div id="chat-window" class="hidden bg-white w-80 h-96 rounded-xl shadow-2xl flex flex-col mb-4 border border-gray-200 fade-in">
-            <div class="bg-blue-800 text-white p-3 rounded-t-xl flex justify-between items-center">
-                <span class="font-bold text-sm">智能政务助手</span>
-                <button onclick="toggleChat()" class="text-white/80"><i class="fas fa-times"></i></button>
-            </div>
-            <div id="chat-messages" class="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50 text-sm"></div>
-            <div class="p-2 border-t bg-white flex">
-                <input type="text" id="chat-input" placeholder="输入问题..." class="flex-1 border rounded-l px-2 py-1 text-sm focus:outline-none" onkeypress="if(event.key==='Enter') sendMessage()">
-                <button onclick="sendMessage()" class="bg-blue-800 text-white px-3 rounded-r"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-        <button onclick="toggleChat()" class="bg-blue-800 hover:bg-blue-700 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-xl">
-            <i class="fas fa-comments"></i>
-        </button>
-    </div>
-
-    <script>
-        // --- 数据初始化与工具函数 ---
-        const DB = {
-            getUsers: () => JSON.parse(localStorage.getItem('nfrd_users')) || [],
-            setUsers: (users) => localStorage.setItem('nfrd_users', JSON.stringify(users)),
-            getNews: () => JSON.parse(localStorage.getItem('nfrd_news')) || [
-                {id: 1, title: '总统签署第1024号行政令，推动数字政府建设', content: '旨在提高政府办事效率...', date: '2026-07-15'},
-                {id: 2, title: '财政部发布2026年度上半年财政收支情况', content: '财政收入稳步增长...', date: '2026-07-14'}
-            ],
-            setNews: (news) => localStorage.setItem('nfrd_news', JSON.stringify(news)),
-            getJobs: () => JSON.parse(localStorage.getItem('nfrd_jobs')) || [
-                {id: 1, title: '数字经济局 - 高级分析师', dept: '数字经济局'},
-                {id: 2, title: '外交部 - 翻译专员', dept: '外交部'}
-            ],
-            setJobs: (jobs) => localStorage.setItem('nfrd_jobs', JSON.stringify(jobs)),
-            getChats: () => JSON.parse(localStorage.getItem('nfrd_chats')) || [],
-            addChat: (msg) => {
-                const chats = DB.getChats();
-                chats.push(msg);
-                localStorage.setItem('nfrd_chats', JSON.stringify(chats));
-            }
-        };
-
-        let currentUser = JSON.parse(sessionStorage.getItem('nfrd_current_user')) || null;
-
-        // --- 页面路由控制 ---
-        function showPage(pageId) {
-            // 隐藏所有视图
-            document.querySelectorAll('[id^="view-"]').forEach(el => el.classList.add('hidden-section'));
-            
-            // 显示目标视图
-            const target = document.getElementById(`view-${pageId}`);
-            if(target) target.classList.remove('hidden-section');
-
-            // 特殊处理
-            if(pageId === 'home') renderHome();
-            if(pageId === 'admin') {
-                if(!currentUser || currentUser.username !== 'zhaotianle') {
-                    alert("无权访问：仅限系统管理员登录");
-                    showPage('login');
-                    return;
-                }
-                renderAdminPanel();
-            }
-            updateNav();
-        }
-
-        function updateNav() {
-            const authContainer = document.getElementById('top-auth-links');
-            const adminNav = document.getElementById('admin-nav-item');
-            
-            if (currentUser) {
-                authContainer.innerHTML = `
-                    <span class="text-blue-800 font-bold"><i class="fas fa-user-circle"></i> ${currentUser.realName || currentUser.username}</span>
-                    <a href="#" onclick="logout()" class="hover:text-red-600">退出</a>
-                `;
-                // 如果是管理员，显示后台入口
-                if(currentUser.username === 'zhaotianle') {
-                    adminNav.classList.remove('hidden');
-                } else {
-                    adminNav.classList.add('hidden');
-                }
-            } else {
-                authContainer.innerHTML = `
-                    <a href="#" onclick="showPage('login')" class="hover:text-blue-800">登录</a>
-                    <span class="text-gray-300">|</span>
-                    <a href="#" onclick="showPage('register-step1')" class="hover:text-blue-800">注册</a>
-                `;
-                adminNav.classList.add('hidden');
-            }
-        }
-
-        // --- 注册逻辑 ---
-        let tempRegData = {};
-
-        function handleRegStep1(e) {
-            e.preventDefault();
-            const username = document.getElementById('reg-username').value;
-            const password = document.getElementById('reg-password').value;
-            
-            // 检查用户名是否已存在
-            const users = DB.getUsers();
-            if(users.find(u => u.username === username)) {
-                alert("该用户名已被注册");
-                return;
-            }
-            // 禁止注册管理员账号
-            if(username === 'zhaotianle') {
-                alert("该用户名受保护，不可注册");
-                return;
-            }
-
-            tempRegData = { username, password };
-            showPage('register-step2');
-        }
-
-        function handleRegStep2(e) {
-            e.preventDefault();
-            const realName = document.getElementById('reg-realname').value;
-            const idCard = document.getElementById('reg-idcard').value;
-
-            const newUser = {
-                ...tempRegData,
-                realName,
-                idCard,
-                role: 'citizen',
-                regTime: new Date().toLocaleString()
-            };
-
-            const users = DB.getUsers();
-            users.push(newUser);
-            DB.setUsers(users);
-
-            // 自动登录
-            sessionStorage.setItem('nfrd_current_user', JSON.stringify(newUser));
-            currentUser = newUser;
-            alert("注册成功！欢迎加入新自由民主共和国。");
-            showPage('home');
-        }
-
-        // --- 登录逻辑 ---
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('login-username').value;
-            const password = document.getElementById('login-password').value;
-
-            // 1. 检查是否是硬编码的管理员
-            if (username === 'zhaotianle' && password === 'ziyouguo1314') {
-                const adminUser = { username: 'zhaotianle', realName: '赵天乐', role: 'admin' };
-                sessionStorage.setItem('nfrd_current_user', JSON.stringify(adminUser));
-                currentUser = adminUser;
-                alert("管理员登录成功");
-                showPage('home'); // 登录后回首页，但导航栏会显示管理入口
-                return;
-            }
-
-            // 2. 检查普通用户
-            const users = DB.getUsers();
-            const user = users.find(u => u.username === username && u.password === password);
-
-            if (user) {
-                sessionStorage.setItem('nfrd_current_user', JSON.stringify(user));
-                currentUser = user;
-                alert("登录成功");
-                showPage('home');
-            } else {
-                alert("用户名或密码错误，或未注册账号");
-            }
-        }
-
-        function logout() {
-            sessionStorage.removeItem('nfrd_current_user');
-            currentUser = null;
-            location.reload();
-        }
-
-        // --- 首页渲染 ---
-        function renderHome() {
-            // 渲染新闻
-            const newsList = DB.getNews();
-            const newsContainer = document.getElementById('news-section');
-            newsContainer.innerHTML = `
-                <div class="md:col-span-2 space-y-4">
-                    <div class="flex justify-between items-center border-l-4 border-blue-800 pl-3 mb-2">
-                        <h3 class="text-xl font-bold text-gray-800">官方要闻</h3>
-                    </div>
-                    ${newsList.map(n => `
-                        <div class="bg-white p-4 rounded shadow-sm hover:shadow-md transition">
-                            <h4 class="font-bold text-lg text-blue-900">${n.title}</h4>
-                            <p class="text-gray-600 text-sm mt-1">${n.content}</p>
-                            <div class="text-xs text-gray-400 mt-2">${n.date}</div>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="bg-white p-4 rounded shadow-sm h-fit">
-                    <h3 class="font-bold mb-3 border-l-4 border-yellow-500 pl-2">便民通道</h3>
-                    <div class="grid grid-cols-2 gap-2 text-center text-sm">
-                        <div class="p-2 bg-gray-50 rounded"><i class="fas fa-id-card text-blue-800 block mb-1"></i>身份认证</div>
-                        <div class="p-2 bg-gray-50 rounded"><i class="fas fa-file-invoice text-blue-800 block mb-1"></i>税务办理</div>
-                    </div>
-                </div>
-            `;
-
-            // 渲染职位
-            const jobsList = DB.getJobs();
-            document.getElementById('jobs-container').innerHTML = jobsList.map(j => `
-                <div class="border rounded p-4 hover:shadow-md bg-white">
-                    <h4 class="font-bold text-gray-800">${j.title}</h4>
-                    <p class="text-sm text-gray-500">${j.dept}</p>
-                    <button onclick="checkAuthForAction()" class="mt-3 w-full bg-blue-50 text-blue-800 py-1 rounded text-sm hover:bg-blue-100">查看详情</button>
-                </div>
-            `).join('');
-        }
-
-        function checkAuthForAction() {
-            if(!currentUser) {
-                alert("请先登录以访问详细办事流程");
-                showPage('login');
-            } else {
-                alert("正在进入办事大厅...");
-            }
-        }
-
-        // --- 管理员后台逻辑 ---
-        function switchAdminTab(tabName) {
-            document.querySelectorAll('.admin-panel').forEach(el => el.classList.add('hidden-section'));
-            document.getElementById(`admin-tab-${tabName}`).classList.remove('hidden-section');
-            
-            // 刷新对应数据
-            if(tabName === 'citizens') renderCitizenList();
-            if(tabName === 'chat') renderChatLog();
-            if(tabName === 'news') renderAdminNewsList();
-            if(tabName === 'jobs') renderAdminJobList();
-        }
-
-        function renderAdminPanel() {
-            switchAdminTab('news'); // 默认显示新闻管理
-        }
-
-        // 1. 新闻管理
-        function saveNews(e) {
-            e.preventDefault();
-            const title = document.getElementById('news-title').value;
-            const content = document.getElementById('news-content').value;
-            const news = DB.getNews();
-            news.unshift({
-                id: Date.now(),
-                title,
-                content,
-                date: new Date().toLocaleDateString()
-            });
-            DB.setNews(news);
-            alert("新闻发布成功");
-            e.target.reset();
-            renderAdminNewsList();
-        }
-
-        function renderAdminNewsList() {
-            const news = DB.getNews();
-            document.getElementById('admin-news-list').innerHTML = news.map((n, index) => `
-                <div class="flex justify-between items-center bg-gray-50 p-2 rounded border">
-                    <span class="truncate w-2/3">${n.title}</span>
-                    <button onclick="deleteNews(${index})" class="text-red-500 text-sm hover:underline">删除</button>
-                </div>
-            `).join('');
-        }
-
-        function deleteNews(index) {
-            if(confirm("确定删除这条新闻吗？")) {
-                const news = DB.getNews();
-                news.splice(index, 1);
-                DB.setNews(news);
-                renderAdminNewsList();
-            }
-        }
-
-        // 2. 招聘管理
-        function saveJob(e) {
-            e.preventDefault();
-            const title = document.getElementById('job-title').value;
-            const dept = document.getElementById('job-dept').value;
-            const jobs = DB.getJobs();
-            jobs.unshift({ id: Date.now(), title, dept });
-            DB.setJobs(jobs);
-            alert("职位发布成功");
-            e.target.reset();
-            renderAdminJobList();
-        }
-
-        function renderAdminJobList() {
-            const jobs = DB.getJobs();
-            document.getElementById('admin-job-list').innerHTML = jobs.map((j, index) => `
-                <div class="flex justify-between items-center bg-gray-50 p-2 rounded border">
-                    <span>${j.dept} - ${j.title}</span>
-                    <button onclick="deleteJob(${index})" class="text-red-500 text-sm hover:underline">删除</button>
-                </div>
-            `).join('');
-        }
-
-        function deleteJob(index) {
-            if(confirm("确定删除该职位吗？")) {
-                const jobs = DB.getJobs();
-                jobs.splice(index, 1);
-                DB.setJobs(jobs);
-                renderAdminJobList();
-            }
-        }
-
-        // 3. 公民信息
-        function renderCitizenList() {
-            const users = DB.getUsers();
-            document.getElementById('admin-citizen-list').innerHTML = users.map(u => `
-                <tr class="border-b">
-                    <td class="py-2 px-4">${u.username}</td>
-                    <td class="py-2 px-4">${u.realName}</td>
-                    <td class="py-2 px-4 font-mono text-xs">${u.idCard}</td>
-                    <td class="py-2 px-4 text-xs text-gray-500">${u.regTime}</td>
-                </tr>
-            `).join('');
-        }
-
-        // 4. 聊天存档
-        function renderChatLog() {
-            const chats = DB.getChats();
-            document.getElementById('admin-chat-log').innerHTML = chats.map(c => `
-                <div class="border-b pb-1 mb-1">
-                    <span class="font-bold text-blue-800">[${c.user}]</span> 
-                    <span class="text-gray-400 text-xs">${c.time}</span>: 
-                    ${c.msg}
-                </div>
-            `).join('');
-        }
-
-        // --- 聊天功能 ---
-        function toggleChat() {
-            const win = document.getElementById('chat-window');
-            win.classList.toggle('hidden');
-            if(!win.classList.contains('hidden')) renderChatHistory();
-        }
-
-        function openChat() {
-            if(!currentUser) {
-                alert("请先登录后使用聊天功能");
-                showPage('login');
-                return;
-            }
-            const win = document.getElementById('chat-window');
-            win.classList.remove('hidden');
-            renderChatHistory();
-        }
-
-        function renderChatHistory() {
-            if(!currentUser) return;
-            const allChats = DB.getChats();
-            // 简单过滤：只显示当前用户和管理员的对话（这里简化为显示当前用户的所有发言和系统回复）
-            // 为了演示效果，显示所有包含当前用户名的记录
-            const myChats = allChats.filter(c => c.user === currentUser.username || c.user === 'System');
-            
-            const container = document.getElementById('chat-messages');
-            container.innerHTML = myChats.map(c => {
-                if(c.user === 'System') {
-                    return `<div class="flex items-start space-x-2"><div class="bg-blue-100 p-2 rounded text-xs text-blue-900">${c.msg}</div></div>`;
-                } else {
-                    return `<div class="flex items-start justify-end space-x-2"><div class="bg-blue-800 text-white p-2 rounded text-xs">${c.msg}</div></div>`;
-                }
-            }).join('');
-            container.scrollTop = container.scrollHeight;
-        }
-
-        function sendMessage() {
-            if(!currentUser) {
-                alert("请先登录");
-                toggleChat();
-                showPage('login');
-                return;
-            }
-            const input = document.getElementById('chat-input');
-            const msg = input.value.trim();
-            if(!msg) return;
-
-            // 保存用户消息
-            DB.addChat({ user: currentUser.username, msg, time: new Date().toLocaleTimeString() });
-            
-            // 保存系统回复（模拟）
-            setTimeout(() => {
-                DB.addChat({ user: 'System', msg: '收到您的问题：“' + msg + '”。工作人员将尽快回复。', time: new Date().toLocaleTimeString() });
-                renderChatHistory();
-            }, 500);
-
-            input.value = '';
-            renderChatHistory();
-        }
-
-        // --- 初始化 ---
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
-        showPage('home'); // 默认首页
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
