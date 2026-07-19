@@ -1,268 +1,407 @@
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新自由民主共和国 - 官方网站</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- 引入 FontAwesome 图标 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>新自由民主共和国 · 官方网站</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <!-- 顶部导航栏 -->
-    <header id="main-header">
-        <div class="container header-content">
-            <div class="logo-area">
-                <i class="fa-solid fa-landmark"></i>
-                <div>
-                    <h1>新自由民主共和国</h1>
-                    <p>The Official Website of the New Liberal Democratic Republic</p>
+    <!-- ========== 顶部导航 ========== -->
+    <nav class="navbar" id="navbar">
+        <div class="logo" onclick="navigateTo('home')">
+            🇳🇫 新自由民主共和国
+            <span>官网</span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <button class="active" data-page="home">首页</button>
+            <button data-page="news">官方新闻</button>
+            <button data-page="elections">公务员选举</button>
+            <button data-page="chat">聊天</button>
+            <button data-page="users">公民名录</button>
+            <button data-page="idcard">身份证</button>
+            <button data-page="admin" id="adminNavBtn" style="display:none;">管理</button>
+            <button data-page="login" id="loginNavBtn">登录</button>
+            <button data-page="register" id="registerNavBtn">注册</button>
+        </div>
+        <div class="user-badge" id="userBadge" style="display:none;">
+            <div class="avatar" id="userAvatar">U</div>
+            <span class="uname" id="userNameDisplay">用户</span>
+            <span class="admin-tag" id="adminTag" style="display:none;">管理员</span>
+            <button class="logout-btn" onclick="logout()">退出</button>
+        </div>
+    </nav>
+
+    <!-- ========== 主容器 ========== -->
+    <div class="main-container">
+
+        <!-- ================================ -->
+        <!-- 页面：首页 -->
+        <!-- ================================ -->
+        <div class="page active" id="page-home">
+            <div class="card">
+                <h2>🇳🇫 欢迎来到新自由民主共和国</h2>
+                <p style="color:#555;font-size:16px;line-height:1.7;">
+                    新自由民主共和国是一个以自由、民主、法治为核心价值的国家。
+                    我们致力于为人民提供公正、透明、高效的公共服务。
+                    本官方网站为您提供新闻资讯、公务员选举、公民互动等一站式服务。
+                </p>
+                <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:18px;">
+                    <button class="btn btn-primary" onclick="navigateTo('news')">📰 浏览新闻</button>
+                    <button class="btn btn-success" onclick="navigateTo('elections')">🗳️ 参与选举</button>
+                    <button class="btn btn-outline" onclick="navigateTo('chat')">💬 在线聊天</button>
                 </div>
             </div>
-            <nav id="nav-menu">
-                <!-- 动态生成菜单 -->
-            </nav>
-            <div class="user-status" id="user-status">
-                <!-- 动态显示登录状态 -->
-            </div>
-        </div>
-    </header>
 
-    <!-- 主要内容区域 -->
-    <main class="container main-content">
-        
-        <!-- 1. 首页 / 官方新闻 -->
-        <section id="page-home" class="page-section active">
-            <div class="hero-banner">
-                <h2>欢迎访问新自由民主共和国政府门户网站</h2>
-                <p>服务人民 · 公正廉洁 · 高效透明</p>
-            </div>
-            
-            <div class="news-grid">
-                <div class="news-main">
-                    <h3><i class="fa-solid fa-newspaper"></i> 官方要闻</h3>
-                    <div id="news-list-container">
-                        <!-- 新闻列表动态加载 -->
+            <div class="card">
+                <h2>📌 最新官方新闻</h2>
+                <div id="homeNewsList">
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>暂无新闻，请管理员发布。</p>
                     </div>
                 </div>
-                <div class="news-sidebar">
-                    <h3><i class="fa-solid fa-bullhorn"></i> 通知公告</h3>
-                    <ul id="notice-list">
-                        <li>关于公务员选举结果公示的通知</li>
-                        <li>新一代身份证系统上线公告</li>
-                        <li>国庆假期安排通知</li>
-                    </ul>
+            </div>
+
+            <div class="card">
+                <h2>⚡ 政务信息</h2>
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;">
+                    <div style="background:#f5f7fa;padding:16px 20px;border-radius:14px;">
+                        <div style="font-weight:600;font-size:16px;">📋 公民总数</div>
+                        <div style="font-size:28px;font-weight:700;color:#1a3a6a;" id="totalUsers">0</div>
+                    </div>
+                    <div style="background:#f5f7fa;padding:16px 20px;border-radius:14px;">
+                        <div style="font-weight:600;font-size:16px;">📰 新闻总数</div>
+                        <div style="font-size:28px;font-weight:700;color:#1a3a6a;" id="totalNews">0</div>
+                    </div>
+                    <div style="background:#f5f7fa;padding:16px 20px;border-radius:14px;">
+                        <div style="font-weight:600;font-size:16px;">🗳️ 进行中选举</div>
+                        <div style="font-size:28px;font-weight:700;color:#1a3a6a;" id="totalElections">0</div>
+                    </div>
+                    <div style="background:#f5f7fa;padding:16px 20px;border-radius:14px;">
+                        <div style="font-weight:600;font-size:16px;">💬 聊天消息</div>
+                        <div style="font-size:28px;font-weight:700;color:#1a3a6a;" id="totalChats">0</div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- 2. 登录页面 -->
-        <section id="page-login" class="page-section">
-            <div class="auth-box">
-                <h2>公民登录</h2>
-                <form id="login-form">
+        <!-- ================================ -->
+        <!-- 页面：登录 -->
+        <!-- ================================ -->
+        <div class="page" id="page-login">
+            <div class="card" style="max-width:480px;margin:0 auto;">
+                <h2>🔐 登录</h2>
+                <p class="text-muted" style="margin-bottom:18px;">请输入您的用户名和密码</p>
+                <form id="loginForm" onsubmit="return handleLogin(event)">
                     <div class="form-group">
                         <label>用户名</label>
-                        <input type="text" id="login-username" required placeholder="请输入注册用户名">
+                        <input type="text" id="loginUsername" placeholder="请输入用户名" required />
                     </div>
                     <div class="form-group">
                         <label>密码</label>
-                        <input type="password" id="login-password" required placeholder="请输入密码">
+                        <input type="password" id="loginPassword" placeholder="请输入密码" required />
                     </div>
-                    <button type="submit" class="btn-primary">登录</button>
-                    <p class="switch-auth">还没有账号？ <a href="#" onclick="app.navigate('register')">去注册</a></p>
+                    <button type="submit" class="btn btn-primary btn-block">登 录</button>
+                    <div class="text-center mt-16">
+                        <span class="text-muted">还没有账号？</span>
+                        <a href="#" onclick="navigateTo('register');return false;" style="color:#1a3a6a;font-weight:600;">立即注册</a>
+                    </div>
                 </form>
             </div>
-        </section>
+        </div>
 
-        <!-- 3. 注册页面 (第一步) -->
-        <section id="page-register" class="page-section">
-            <div class="auth-box">
-                <h2>公民注册</h2>
-                <form id="register-form-step1">
+        <!-- ================================ -->
+        <!-- 页面：注册 -->
+        <!-- ================================ -->
+        <div class="page" id="page-register">
+            <div class="card" style="max-width:560px;margin:0 auto;">
+                <h2>📝 注册新账号</h2>
+                <p class="text-muted" style="margin-bottom:18px;">创建您的公民账号，请如实填写信息</p>
+                <form id="registerForm" onsubmit="return handleRegister(event)">
                     <div class="form-group">
-                        <label>设置用户名</label>
-                        <input type="text" id="reg-username" required placeholder="用于登录的唯一标识">
+                        <label>用户名 *</label>
+                        <input type="text" id="regUsername" placeholder="请设置用户名" required />
                     </div>
                     <div class="form-group">
-                        <label>设置密码</label>
-                        <input type="password" id="reg-password" required placeholder="请设置安全密码">
+                        <label>密码 *</label>
+                        <input type="password" id="regPassword" placeholder="请设置密码" required />
                     </div>
-                    <button type="submit" class="btn-primary">下一步：完善身份信息</button>
-                    <p class="switch-auth">已有账号？ <a href="#" onclick="app.navigate('login')">去登录</a></p>
+                    <div class="form-group">
+                        <label>确认密码 *</label>
+                        <input type="password" id="regPassword2" placeholder="请再次输入密码" required />
+                    </div>
+                    <hr style="border:none;border-top:1px solid #e8ecf2;margin:16px 0;" />
+                    <p style="font-weight:500;margin-bottom:12px;">📇 身份证信息（请如实填写）</p>
+                    <div class="form-group">
+                        <label>真实姓名 *</label>
+                        <input type="text" id="regName" placeholder="请输入真实姓名" required />
+                    </div>
+                    <div class="form-group">
+                        <label>身份证号码 *</label>
+                        <input type="text" id="regIdNumber" placeholder="请输入18位身份证号" required />
+                    </div>
+                    <div class="form-group">
+                        <label>家庭住址</label>
+                        <input type="text" id="regAddress" placeholder="请输入家庭住址" />
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block">注册并保存</button>
+                    <div class="text-center mt-16">
+                        <span class="text-muted">已有账号？</span>
+                        <a href="#" onclick="navigateTo('login');return false;" style="color:#1a3a6a;font-weight:600;">去登录</a>
+                    </div>
                 </form>
             </div>
-        </section>
+        </div>
 
-        <!-- 4. 实名认证页面 (注册第二步) -->
-        <section id="page-identity" class="page-section">
-            <div class="auth-box">
-                <h2>实名认证</h2>
-                <p class="hint">为了保障公民权益，请填写真实身份信息</p>
-                <form id="identity-form">
+        <!-- ================================ -->
+        <!-- 页面：官方新闻 -->
+        <!-- ================================ -->
+        <div class="page" id="page-news">
+            <div class="card">
+                <div class="flex-between">
+                    <h2>📰 官方新闻</h2>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-primary btn-sm" id="newsAddBtn" style="display:none;" onclick="showNewsEditor()">+ 新建新闻</button>
+                    </div>
+                </div>
+                <div id="newsListContainer">
+                    <div class="empty-state">
+                        <div class="icon">📭</div>
+                        <p>暂无新闻，管理员可点击「新建新闻」发布。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 新闻编辑器（隐藏） -->
+            <div class="card" id="newsEditor" style="display:none;">
+                <h2 id="newsEditorTitle">📝 新建新闻</h2>
+                <form id="newsForm" onsubmit="return handleNewsSubmit(event)">
+                    <input type="hidden" id="newsEditId" value="" />
+                    <div class="form-group">
+                        <label>标题 *</label>
+                        <input type="text" id="newsTitle" placeholder="请输入新闻标题" required />
+                    </div>
+                    <div class="form-group">
+                        <label>内容 *</label>
+                        <textarea id="newsContent" rows="5" placeholder="请输入新闻内容" required></textarea>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary">发布</button>
+                        <button type="button" class="btn btn-outline" onclick="cancelNewsEditor()">取消</button>
+                    </div>
+                </form>
+            </div>
+            <!-- 新闻详情弹窗（内嵌） -->
+            <div class="card" id="newsDetailContainer" style="display:none;">
+                <h2 id="newsDetailTitle">📄 新闻详情</h2>
+                <div id="newsDetailContent"></div>
+                <hr style="margin:16px 0;border-color:#e8ecf2;" />
+                <h4 style="margin-bottom:10px;">💬 互动回复</h4>
+                <div id="newsComments" style="margin-bottom:12px;"></div>
+                <div style="display:flex;gap:10px;">
+                    <input type="text" id="newsCommentInput" placeholder="发表您的看法..." style="flex:1;padding:10px 16px;border:1.5px solid #dde0e8;border-radius:30px;font-family:inherit;" />
+                    <button class="btn btn-primary btn-sm" onclick="submitNewsComment()">发送</button>
+                </div>
+                <div class="mt-16">
+                    <button class="btn btn-outline btn-sm" onclick="closeNewsDetail()">返回列表</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- 页面：公务员选举 -->
+        <!-- ================================ -->
+        <div class="page" id="page-elections">
+            <div class="card">
+                <div class="flex-between">
+                    <h2>🗳️ 公务员选举</h2>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-primary btn-sm" id="electionAddBtn" style="display:none;" onclick="showElectionEditor()">+ 新建选举</button>
+                    </div>
+                </div>
+                <div id="electionListContainer">
+                    <div class="empty-state">
+                        <div class="icon">🗳️</div>
+                        <p>暂无选举，管理员可新建选举。</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 选举编辑器 -->
+            <div class="card" id="electionEditor" style="display:none;">
+                <h2 id="electionEditorTitle">📝 新建选举</h2>
+                <form id="electionForm" onsubmit="return handleElectionSubmit(event)">
+                    <input type="hidden" id="electionEditId" value="" />
+                    <div class="form-group">
+                        <label>选举职位 *</label>
+                        <input type="text" id="electionPosition" placeholder="如：市长、议员" required />
+                    </div>
+                    <div class="form-group">
+                        <label>选举描述</label>
+                        <textarea id="electionDescription" rows="3" placeholder="描述选举内容"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>候选人（用户名，用逗号分隔）*</label>
+                        <input type="text" id="electionCandidates" placeholder="如：user1,user2,user3" required />
+                        <div class="help-text">必须是已注册的公民用户名</div>
+                    </div>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary">创建选举</button>
+                        <button type="button" class="btn btn-outline" onclick="cancelElectionEditor()">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- 页面：聊天 -->
+        <!-- ================================ -->
+        <div class="page" id="page-chat">
+            <div class="card">
+                <h2>💬 在线聊天</h2>
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <span style="font-weight:600;">与 <span id="chatTargetName">选择用户</span> 聊天</span>
+                        <select id="chatUserSelect" onchange="switchChatUser()">
+                            <option value="">-- 选择聊天对象 --</option>
+                        </select>
+                    </div>
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="empty-state" style="padding:30px 0;">
+                            <div class="icon">💬</div>
+                            <p>选择一位用户开始聊天</p>
+                        </div>
+                    </div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="输入消息..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+                        <button onclick="sendChatMessage()">发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- 页面：公民名录 -->
+        <!-- ================================ -->
+        <div class="page" id="page-users">
+            <div class="card">
+                <h2>👥 公民名录</h2>
+                <p class="text-muted" style="margin-bottom:16px;">点击用户可查看其主页并发送消息</p>
+                <div class="user-grid" id="userGridContainer">
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <div class="icon">👤</div>
+                        <p>暂无公民信息</p>
+                    </div>
+                </div>
+            </div>
+            <!-- 用户主页 -->
+            <div class="card" id="userProfileContainer" style="display:none;">
+                <h2 id="profileUserName">👤 用户主页</h2>
+                <div id="profileContent"></div>
+                <div class="mt-16">
+                    <button class="btn btn-outline btn-sm" onclick="closeUserProfile()">返回名录</button>
+                    <button class="btn btn-primary btn-sm" id="profileChatBtn" onclick="chatWithUser()">💬 发送消息</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================================ -->
+        <!-- 页面：身份证 -->
+        <!-- ================================ -->
+        <div class="page" id="page-idcard">
+            <div class="card">
+                <h2>📇 我的身份证信息</h2>
+                <p class="text-muted" style="margin-bottom:16px;">您的身份信息已加密保存，仅您本人和管理员可见。</p>
+                <div class="id-card-display" id="idCardDisplay">
+                    <div class="field"><span class="label">用户名</span><span class="value" id="idUsername">-</span></div>
+                    <div class="field"><span class="label">真实姓名</span><span class="value" id="idName">-</span></div>
+                    <div class="field"><span class="label">身份证号</span><span class="value" id="idNumber">-</span></div>
+                    <div class="field"><span class="label">家庭住址</span><span class="value" id="idAddress">-</span></div>
+                    <div class="field"><span class="label">角色</span><span class="value" id="idRole">-</span></div>
+                    <div class="field"><span class="label">职位</span><span class="value" id="idPosition">-</span></div>
+                </div>
+                <div class="mt-16">
+                    <button class="btn btn-outline btn-sm" onclick="editMyIdCard()">✏️ 修改信息</button>
+                </div>
+            </div>
+            <!-- 编辑身份证 -->
+            <div class="card" id="idCardEditor" style="display:none;">
+                <h2>✏️ 修改身份证信息</h2>
+                <form id="idCardForm" onsubmit="return handleIdCardUpdate(event)">
                     <div class="form-group">
                         <label>真实姓名</label>
-                        <input type="text" id="id-realname" required placeholder="身份证上的姓名">
+                        <input type="text" id="idEditName" />
                     </div>
                     <div class="form-group">
                         <label>身份证号码</label>
-                        <input type="text" id="id-number" required placeholder="18位身份证号">
+                        <input type="text" id="idEditNumber" />
                     </div>
                     <div class="form-group">
-                        <label>居住地址</label>
-                        <input type="text" id="id-address" required placeholder="详细居住地址">
+                        <label>家庭住址</label>
+                        <input type="text" id="idEditAddress" />
                     </div>
-                    <button type="submit" class="btn-primary">提交认证并完成注册</button>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <button type="button" class="btn btn-outline" onclick="cancelIdCardEdit()">取消</button>
+                    </div>
                 </form>
             </div>
-        </section>
-
-        <!-- 5. 公务员选举 -->
-        <section id="page-election" class="page-section">
-            <h2><i class="fa-solid fa-check-to-slot"></i> 公务员在线选举大厅</h2>
-            <div class="election-container" id="election-list">
-                <!-- 候选人动态加载 -->
-            </div>
-        </section>
-
-        <!-- 6. 公民广场 (查看其他用户) -->
-        <section id="page-citizens" class="page-section">
-            <h2><i class="fa-solid fa-users"></i> 公民广场</h2>
-            <div class="search-bar">
-                <input type="text" id="citizen-search" placeholder="搜索公民姓名或用户名...">
-            </div>
-            <div class="citizen-grid" id="citizen-list">
-                <!-- 用户卡片动态加载 -->
-            </div>
-        </section>
-
-        <!-- 7. 聊天室 -->
-        <section id="page-chat" class="page-section">
-            <div class="chat-layout">
-                <div class="chat-sidebar">
-                    <h3>会话列表</h3>
-                    <ul id="chat-user-list">
-                        <li class="active" onclick="app.loadChat('public')"><i class="fa-solid fa-globe"></i> 公共频道</li>
-                        <!-- 私人会话动态添加 -->
-                    </ul>
-                </div>
-                <div class="chat-main">
-                    <div class="chat-header" id="chat-header">公共频道</div>
-                    <div class="chat-messages" id="chat-messages">
-                        <!-- 消息记录 -->
-                    </div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-input" placeholder="输入消息... (@用户名 可提及)">
-                        <button onclick="app.sendMessage()" class="btn-primary"><i class="fa-solid fa-paper-plane"></i> 发送</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8. 个人中心/设置 -->
-        <section id="page-profile" class="page-section">
-            <h2>个人中心</h2>
-            <div class="profile-card">
-                <div class="profile-info">
-                    <img src="https://picsum.photos/100/100?random=user" alt="用户头像" class="avatar">
-                    <div>
-                        <h3 id="profile-name">--</h3>
-                        <p id="profile-role">普通公民</p>
-                    </div>
-                </div>
-                <div class="profile-details">
-                    <p><strong>身份证号:</strong> <span id="profile-id">--</span></p>
-                    <p><strong>地址:</strong> <span id="profile-address">--</span></p>
-                </div>
-                <div class="profile-actions">
-                    <button onclick="app.logout()" class="btn-danger">退出登录</button>
-                </div>
-            </div>
-        </section>
-
-        <!-- 9. 管理员后台 (仅管理员可见) -->
-        <section id="page-admin" class="page-section">
-            <h2><i class="fa-solid fa-shield-halved"></i> 政务管理后台</h2>
-            
-            <div class="admin-tabs">
-                <button class="tab-btn active" onclick="app.switchAdminTab('news')">新闻管理</button>
-                <button class="tab-btn" onclick="app.switchAdminTab('election')">选举管理</button>
-                <button class="tab-btn" onclick="app.switchAdminTab('users')">公民信息管理</button>
-            </div>
-
-            <!-- 管理员：新闻管理 -->
-            <div id="admin-tab-news" class="admin-panel">
-                <h3>发布/编辑新闻</h3>
-                <form id="admin-news-form">
-                    <input type="hidden" id="edit-news-id">
-                    <div class="form-group">
-                        <label>标题</label>
-                        <input type="text" id="news-title" required>
-                    </div>
-                    <div class="form-group">
-                        <label>内容</label>
-                        <textarea id="news-content" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="btn-primary">发布/更新新闻</button>
-                    <button type="button" onclick="app.resetNewsForm()" class="btn-secondary">重置</button>
-                </form>
-                <hr>
-                <h4>现有新闻列表</h4>
-                <ul id="admin-news-list" class="data-list"></ul>
-            </div>
-
-            <!-- 管理员：选举管理 -->
-            <div id="admin-tab-election" class="admin-panel" style="display:none;">
-                <h3>添加候选人</h3>
-                <form id="admin-election-form">
-                    <div class="form-group">
-                        <label>候选人姓名</label>
-                        <input type="text" id="cand-name" required>
-                    </div>
-                    <div class="form-group">
-                        <label>竞选职位</label>
-                        <input type="text" id="cand-position" required>
-                    </div>
-                    <div class="form-group">
-                        <label>简介</label>
-                        <textarea id="cand-desc" rows="3"></textarea>
-                    </div>
-                    <button type="submit" class="btn-primary">添加候选人</button>
-                </form>
-                <hr>
-                <h4>候选人列表</h4>
-                <ul id="admin-cand-list" class="data-list"></ul>
-            </div>
-
-            <!-- 管理员：用户管理 -->
-            <div id="admin-tab-users" class="admin-panel" style="display:none;">
-                <h3>注册公民信息总览</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>用户名</th>
-                            <th>真实姓名</th>
-                            <th>身份证号</th>
-                            <th>地址</th>
-                            <th>操作</th>
-                        </tr>
-                    </thead>
-                    <tbody id="admin-user-table"></tbody>
-                </table>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 新自由民主共和国政府版权所有 | 网站标识码: NLD-2026-001 | ICP备案号: 京ICP备20260000号</p>
-            <p>技术支持：国家信息中心 | 建议使用 Chrome 或 Edge 浏览器访问本站</p>
         </div>
-    </footer>
 
+        <!-- ================================ -->
+        <!-- 页面：管理员 -->
+        <!-- ================================ -->
+        <div class="page" id="page-admin">
+            <div class="card">
+                <h2>⚙️ 管理员控制台</h2>
+                <p class="text-muted">欢迎，管理员 <strong id="adminNameDisplay">赵天乐</strong></p>
+                <div class="admin-tabs">
+                    <button class="active" data-tab="admin-news">📰 新闻管理</button>
+                    <button data-tab="admin-elections">🗳️ 选举管理</button>
+                    <button data-tab="admin-users">👥 公民管理</button>
+                    <button data-tab="admin-settings">⚙️ 系统设置</button>
+                </div>
+
+                <!-- 新闻管理 -->
+                <div class="admin-panel active" id="admin-news">
+                    <div class="flex-between mb-16">
+                        <span style="font-weight:500;">管理所有新闻</span>
+                        <button class="btn btn-primary btn-sm" onclick="showNewsEditor()">+ 新建新闻</button>
+                    </div>
+                    <div id="adminNewsList"></div>
+                </div>
+
+                <!-- 选举管理 -->
+                <div class="admin-panel" id="admin-elections">
+                    <div class="flex-between mb-16">
+                        <span style="font-weight:500;">管理所有选举</span>
+                        <button class="btn btn-primary btn-sm" onclick="showElectionEditor()">+ 新建选举</button>
+                    </div>
+                    <div id="adminElectionList"></div>
+                </div>
+
+                <!-- 公民管理 -->
+                <div class="admin-panel" id="admin-users">
+                    <div style="font-weight:500;margin-bottom:12px;">所有公民信息</div>
+                    <div id="adminUserList"></div>
+                </div>
+
+                <!-- 系统设置 -->
+                <div class="admin-panel" id="admin-settings">
+                    <div style="font-weight:500;margin-bottom:12px;">系统设置</div>
+                    <div style="display:flex;flex-direction:column;gap:12px;max-width:400px;">
+                        <button class="btn btn-outline btn-block" onclick="exportAllData()">📤 导出所有数据</button>
+                        <button class="btn btn-outline btn-block" onclick="document.getElementById('importFileInput').click()">📥 导入数据</button>
+                        <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importAllData(event)" />
+                        <button class="btn btn-danger btn-block" onclick="if(confirm('确定要清除所有数据吗？')){clearAllData();}">🗑️ 清除所有数据</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /main-container -->
+
+    <!-- ========== 应用逻辑 ========== -->
     <script src="app.js"></script>
 </body>
 </html>
