@@ -3,205 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新自由民主社团</title>
-    <!-- 引入外部 CSS -->
-    <link rel="stylesheet" href="style.css">
+    <title>NF 社团官方网站</title>
+    <!-- 引入外部资源 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入独立CSS文件 -->
+    <link rel="stylesheet" href="./style.css">
 </head>
-<body>
-    <!-- ===== 登录页面 ===== -->
-    <div id="loginPage">
-        <div class="login-box">
-            <div class="logo-icon">🗽</div>
-            <h1>新自由民主社团</h1>
-            <p class="sub">登录以继续</p>
-            <form id="loginForm" autocomplete="off">
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input type="text" id="loginUsername" class="input" placeholder="请输入用户名" required>
+<body class="bg-gray-50 font-sans">
+    <!-- 顶部导航栏 -->
+    <nav class="bg-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <span class="text-2xl font-bold text-blue-700"><i class="fas fa-users mr-2"></i>NF 社团</span>
                 </div>
-                <div class="form-group">
-                    <label>密码</label>
-                    <input type="password" id="loginPassword" class="input" placeholder="请输入密码" required>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="#home" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">首页</a>
+                    <a href="#blog" class="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">博客中心</a>
+                    <button id="open-editor-btn" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors">
+                        <i class="fas fa-plus mr-2"></i>发布文章
+                    </button>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">登 录</button>
-                <div id="loginError" class="login-error"></div>
-            </form>
+                <div class="md:hidden">
+                    <button class="text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- ===== 主应用 ===== -->
-    <div id="app" class="hidden">
-        <!-- 导航栏 -->
-        <nav class="navbar" id="mainNav">
-            <div class="brand">🗽 新自由<span>民主</span>社团</div>
-            <div class="nav-links" id="navLinks"></div>
-        </nav>
+    <!-- 首页Hero区域 -->
+    <section id="home" class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-20 fade-in">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6">欢迎来到NF社团</h1>
+            <p class="text-xl opacity-90 max-w-3xl mx-auto mb-8">这里是社团成员交流分享的平台，记录我们的活动动态、技术心得与生活故事</p>
+            <div class="flex justify-center space-x-4">
+                <a href="#blog" class="bg-white text-blue-700 px-6 py-3 rounded-md font-medium hover:bg-gray-100 transition-colors">
+                    浏览博客
+                </a>
+                <button id="hero-editor-btn" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded-md font-medium hover:bg-white/10 transition-colors">
+                    开始创作
+                </button>
+            </div>
+        </div>
+    </section>
 
-        <!-- 页面容器 -->
-        <div class="container" id="pageContainer">
-            <!-- 管理员页面 -->
-            <div id="adminPage" class="page">
-                <div class="flex-between mb-20">
-                    <h2>📊 管理员仪表盘</h2>
-                    <span id="adminTimer" class="admin-timer hidden"></span>
+    <!-- 社团介绍区域 -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800 mb-4">关于我们</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">NF社团是一个专注于技术交流、兴趣分享的开放社群，致力于为成员提供展示自我、共同成长的平台</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                    <i class="fas fa-lightbulb text-4xl text-yellow-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">创意分享</h3>
+                    <p class="text-gray-600">鼓励成员分享自己的创意想法与实践经验，碰撞思维火花</p>
                 </div>
-                <div class="stat-grid" id="adminStats">
-                    <div class="stat-card"><div class="num" id="statUsers">0</div><div class="label">总用户</div></div>
-                    <div class="stat-card"><div class="num" id="statNews">0</div><div class="label">新闻</div></div>
-                    <div class="stat-card"><div class="num" id="statElections">0</div><div class="label">选举</div></div>
-                    <div class="stat-card"><div class="num" id="statTickets">0</div><div class="label">工单</div></div>
+                <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                    <i class="fas fa-users text-4xl text-blue-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">社群交流</h3>
+                    <p class="text-gray-600">定期组织线上线下交流活动，拉近成员之间的距离</p>
                 </div>
-                <div class="grid-2">
-                    <!-- 用户管理 -->
-                    <div class="card">
-                        <h3>👥 用户管理</h3>
-                        <div id="adminUserList" class="mt-12" style="max-height:320px;overflow-y:auto;"></div>
-                        <div class="mt-12 flex gap-8">
-                            <button class="btn btn-sm btn-outline" id="adminRefreshUsers">刷新</button>
-                        </div>
-                    </div>
-                    <!-- 新闻管理 -->
-                    <div class="card">
-                        <h3>📰 新闻管理</h3>
-                        <div class="form-group mt-12">
-                            <input type="text" id="adminNewsTitle" class="input" placeholder="新闻标题">
-                        </div>
-                        <div class="form-group">
-                            <textarea id="adminNewsContent" class="textarea" placeholder="新闻内容"></textarea>
-                        </div>
-                        <div class="flex gap-8">
-                            <button class="btn btn-sm btn-primary" id="adminNewsCreate">发布新闻</button>
-                            <button class="btn btn-sm btn-outline" id="adminNewsRefresh">刷新列表</button>
-                        </div>
-                        <div id="adminNewsList" class="mt-12" style="max-height:260px;overflow-y:auto;"></div>
-                    </div>
-                    <!-- 选举管理 -->
-                    <div class="card">
-                        <h3>🗳️ 创建选举</h3>
-                        <div class="form-group mt-12">
-                            <input type="text" id="adminElectionTitle" class="input" placeholder="选举标题">
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="adminElectionPosition" class="input" placeholder="职位名称 (如: 社长)">
-                        </div>
-                        <div class="form-group">
-                            <label>候选人 (用逗号分隔用户名)</label>
-                            <input type="text" id="adminElectionCandidates" class="input" placeholder="user1, user2, user3">
-                        </div>
-                        <div class="form-group">
-                            <label>选民 (用逗号分隔用户名，留空则全部)</label>
-                            <input type="text" id="adminElectionVoters" class="input" placeholder="user1, user2 (留空=全部)">
-                        </div>
-                        <div class="form-group">
-                            <label>截止日期</label>
-                            <input type="datetime-local" id="adminElectionEnd" class="input">
-                        </div>
-                        <button class="btn btn-sm btn-primary" id="adminElectionCreate">创建选举</button>
-                        <div id="adminElectionList" class="mt-12" style="max-height:200px;overflow-y:auto;"></div>
-                    </div>
-                    <!-- 工单管理 -->
-                    <div class="card">
-                        <h3>🎫 工单管理</h3>
-                        <div id="adminTicketList" class="mt-12" style="max-height:380px;overflow-y:auto;"></div>
-                        <button class="btn btn-sm btn-outline mt-12" id="adminRefreshTickets">刷新工单</button>
-                    </div>
+                <div class="p-6 bg-gray-50 rounded-lg shadow-sm">
+                    <i class="fas fa-rocket text-4xl text-green-500 mb-4"></i>
+                    <h3 class="text-xl font-bold mb-2 text-gray-800">共同成长</h3>
+                    <p class="text-gray-600">提供学习资源与实践机会，帮助成员提升个人能力</p>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- 新闻页面 -->
-            <div id="newsPage" class="page">
-                <div class="flex-between mb-20">
-                    <h2>📰 社团新闻</h2>
-                    <button class="btn btn-sm btn-outline" id="newsRefresh">刷新</button>
-                </div>
-                <div id="newsList" class="card"></div>
+    <!-- 博客列表区域 -->
+    <section id="blog" class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">最新博客文章</h2>
+                <span class="text-gray-500">共 <span id="blog-count">0</span> 篇文章</span>
             </div>
-
-            <!-- 选举页面 -->
-            <div id="electionPage" class="page">
-                <div class="flex-between mb-20">
-                    <h2>🗳️ 选举投票</h2>
-                    <button class="btn btn-sm btn-outline" id="electionRefresh">刷新</button>
-                </div>
-                <div id="electionList" class="grid-3"></div>
+            <div id="blog-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 博客卡片由JS动态生成 -->
             </div>
+        </div>
+    </section>
 
-            <!-- 工单页面 -->
-            <div id="ticketPage" class="page">
-                <div class="flex-between mb-20">
-                    <h2>🎫 我的工单</h2>
-                    <button class="btn btn-sm btn-primary" id="ticketNewBtn">+ 新建工单</button>
-                </div>
-                <div id="ticketList" class="card"></div>
-                <div id="ticketForm" class="card mt-20 hidden">
-                    <h3>新建工单</h3>
-                    <div class="form-group mt-12">
-                        <input type="text" id="ticketSubject" class="input" placeholder="主题">
-                    </div>
-                    <div class="form-group">
-                        <textarea id="ticketContent" class="textarea" placeholder="详细描述"></textarea>
-                    </div>
-                    <div class="flex gap-8">
-                        <button class="btn btn-sm btn-primary" id="ticketSubmit">提交</button>
-                        <button class="btn btn-sm btn-outline" id="ticketCancel">取消</button>
-                    </div>
-                </div>
+    <!-- 博客编辑器模态框 -->
+    <div id="blog-editor-modal" class="fixed inset-0 bg-black/60 hidden z-50 flex items-center justify-center p-4 fade-in">
+        <div class="bg-white w-full max-w-4xl rounded-xl shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="p-5 border-b flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-gray-800">编辑博客文章</h3>
+                <button id="close-editor-btn" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
-
-            <!-- 聊天页面 -->
-            <div id="chatPage" class="page">
-                <div class="flex-between mb-20">
-                    <h2>💬 社团聊天室</h2>
-                    <span class="text-muted" id="chatOnline">在线</span>
+            <div class="p-6 flex-1 overflow-y-auto">
+                <input type="text" id="blog-title" placeholder="请输入文章标题" class="w-full text-2xl font-medium border-b pb-3 mb-5 focus:outline-none text-gray-800">
+                <!-- 编辑器工具栏 -->
+                <div class="flex gap-2 mb-4 border-b pb-3 flex-wrap">
+                    <button id="btn-bold" class="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-gray-700">
+                        <i class="fas fa-bold"></i> 加粗
+                    </button>
+                    <button id="btn-italic" class="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-gray-700">
+                        <i class="fas fa-italic"></i> 斜体
+                    </button>
+                    <button id="btn-insert-img" class="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-gray-700">
+                        <i class="fas fa-image"></i> 插入图片
+                    </button>
+                    <button id="btn-list" class="px-3 py-1 bg-gray-100 rounded hover:bg-gray-200 text-gray-700">
+                        <i class="fas fa-list-ul"></i> 无序列表
+                    </button>
                 </div>
-                <div class="card">
-                    <div class="chat-box" id="chatMessages"></div>
-                    <div class="flex gap-8">
-                        <input type="text" id="chatInput" class="input" placeholder="输入消息..." style="flex:1;">
-                        <button class="btn btn-primary" id="chatSend">发送</button>
-                    </div>
-                </div>
+                <!-- 内容编辑区 -->
+                <div id="blog-content" class="editor-content border p-4 rounded-lg bg-gray-50" contenteditable="true" placeholder="在这里输入你的文章内容，支持图文混排..."></div>
             </div>
-
-            <!-- 个人信息查看 -->
-            <div id="profileViewPage" class="page">
-                <div class="card">
-                    <h2>👤 个人信息</h2>
-                    <div id="profileViewContent" class="mt-12"></div>
-                </div>
-            </div>
-
-            <!-- 个人信息设置 -->
-            <div id="profileSettingsPage" class="page">
-                <div class="card">
-                    <h2>⚙️ 个人设置</h2>
-                    <form id="profileSettingsForm">
-                        <div class="form-group mt-12">
-                            <label>显示名称</label>
-                            <input type="text" id="profileDisplayName" class="input" placeholder="昵称">
-                        </div>
-                        <div class="form-group">
-                            <label>新密码 (留空不修改)</label>
-                            <input type="password" id="profileNewPassword" class="input" placeholder="新密码">
-                        </div>
-                        <button type="submit" class="btn btn-primary">保存设置</button>
-                        <div id="profileSettingsMsg" class="text-muted mt-12"></div>
-                    </form>
-                </div>
+            <div class="p-5 border-t flex justify-end gap-4">
+                <button id="cancel-editor-btn" class="px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-md transition-colors">取消</button>
+                <button id="save-blog-btn" class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors">发布文章</button>
             </div>
         </div>
     </div>
 
-    <!-- ========== 使用 importmap 加载 Firebase ========== -->
-    <script type="importmap">
-        {
-            "imports": {
-                "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-                "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
-            }
-        }
-    </script>
-    <!-- 引入主脚本 (module) -->
-    <script type="module" src="script.js"></script>
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-2">© 2026 NF 社团官方网站 版权所有</p>
+            <p class="text-gray-400 text-sm">本网站为社团内部交流平台，所有内容均遵守国家相关法律法规</p>
+        </div>
+    </footer>
+
+    <!-- 引入独立JS文件 -->
+    <script src="./script.js"></script>
 </body>
 </html>
