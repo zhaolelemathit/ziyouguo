@@ -3,100 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NF新自由民主社团 - 官方博客站</title>
+    <title>NF 新自由民主社团 | 清新博客</title>
+    <!-- 引入清新风格字体与图标 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <nav class="site-navbar">
-        <div class="nav-wrap">
-            <div class="site-logo">NF新自由民主社团</div>
-            <ul class="nav-menu-list">
-                <li class="nav-item" data-target="home">首页</li>
-                <li class="nav-item" data-target="articles">文章页</li>
-                <li class="nav-item" data-target="news">最新信息页</li>
-                <li class="nav-item login-trigger">登录</li>
-            </ul>
+    <!-- 顶部导航：悬浮玻璃质感 -->
+    <header class="glass-header">
+        <div class="container nav-wrapper">
+            <div class="logo">
+                <i class="fas fa-leaf"></i> NF 社团
+            </div>
+            <nav>
+                <ul class="nav-links">
+                    <li class="active" data-page="home">首页</li>
+                    <li data-page="articles">文章</li>
+                    <li data-page="news">动态</li>
+                    <li id="login-btn" class="btn-login">登录</li>
+                </ul>
+            </nav>
         </div>
-    </nav>
+    </header>
 
-    <main class="site-main">
-        <!-- 首页板块 -->
-        <section id="home" class="page-block active">
-            <div class="container">
-                <div class="welcome-card">
-                    <h2>欢迎来到新自由民主社团（NF）！</h2>
-                    <p class="welcome-tip">用户登录后即可查看个人专属信息与通知</p>
-                    <div class="tool-intro">
-                        <p>社团轨道交通线路绘制工具：<a href="https://railmapgen.github.io/rmp/" target="_blank" rel="noopener noreferrer">Rail Map Painter</a></p>
+    <main class="container main-content">
+        <!-- 首页：清新欢迎区 -->
+        <section id="home" class="page active">
+            <div class="hero-card">
+                <div class="hero-text">
+                    <h1>欢迎来到新自由民主社团</h1>
+                    <p class="subtitle">记录思想，分享生活，共同成长</p>
+                    <div class="hero-actions">
+                        <button class="btn-primary" onclick="switchPage('articles')">浏览博客</button>
+                        <a href="https://railmapgen.github.io/rmp/" target="_blank" class="btn-secondary">
+                            <i class="fas fa-map-marked-alt"></i> 铁路绘制工具
+                        </a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://picsum.photos/600/400?nature,water" alt="清新自然风景图">
+                </div>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-pen-nib"></i>
+                    <h3>原创博客</h3>
+                    <p>成员们的技术心得与生活随笔</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bell"></i>
+                    <h3>专属通知</h3>
+                    <p>登录后查看个人任务与社费信息</p>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-users"></i>
+                    <h3>社群互动</h3>
+                    <p>开放包容的交流氛围</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 文章页：卡片式布局 -->
+        <section id="articles" class="page">
+            <h2 class="section-title">精选文章</h2>
+            <div class="article-grid">
+                <article class="card article-card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/400/250?tech" alt="技术分享配图">
+                    </div>
+                    <div class="card-body">
+                        <span class="tag">公告</span>
+                        <h3>10月社团工作安排公示</h3>
+                        <p>本月各岗位分工已确认，请成员登录查看个人专属任务...</p>
+                        <div class="card-footer">
+                            <span><i class="far fa-calendar"></i> 2026-10-06</span>
+                            <span class="read-more">阅读全文</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="card article-card">
+                    <div class="card-img">
+                        <img src="https://picsum.photos/400/250?train" alt="轨道交通配图">
+                    </div>
+                    <div class="card-body">
+                        <span class="tag">教程</span>
+                        <h3>华特轨道交通线路绘制指南</h3>
+                        <p>使用Rail Map Painter工具完成线路创作与导出...</p>
+                        <div class="card-footer">
+                            <span><i class="far fa-calendar"></i> 2026-10-01</span>
+                            <span class="read-more">阅读全文</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 最新信息页：时间轴风格 -->
+        <section id="news" class="page">
+            <h2 class="section-title">最新动态</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content card">
+                        <span class="date">2026-10-06</span>
+                        <h4>博客站点正式上线</h4>
+                        <p>所有成员可通过专属账号登录查看个人通知与工作任务。</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content card">
+                        <span class="date">2026-10-01</span>
+                        <h4>10月社费收缴规则发布</h4>
+                        <p>详细规则已更新至个人通知中心，请查阅。</p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 文章页板块 -->
-        <section id="articles" class="page-block">
-            <div class="container">
-                <h2 class="page-title">社团公开文章专区</h2>
-                <div class="article-wrap">
-                    <div class="article-card">
-                        <h3>2026年10月社团整体工作安排公示</h3>
-                        <p>本次10月社团各成员岗位分工已全部确认完成，所有社团成员可通过个人专属账号登录站点，查看对应个人任务与待办通知。</p>
-                    </div>
-                    <div class="article-card">
-                        <h3>华特轨道交通线路图绘制操作指南</h3>
-                        <p>参与铁路绘制工作的成员可使用Rail Map Painter工具完成线路创作，绘制结束后点击页面右上角导出图标，即可直接导出成品线路图片完成提交。</p>
-                    </div>
+        <!-- 个人中心：隐藏默认显示 -->
+        <section id="profile" class="page">
+            <div class="profile-header card">
+                <div class="avatar-circle">
+                    <i class="fas fa-user"></i>
                 </div>
+                <div class="profile-info">
+                    <h2 id="user-name-display">用户名称</h2>
+                    <p class="role-badge">社团成员</p>
+                </div>
+                <button id="logout-btn" class="btn-outline">退出登录</button>
             </div>
-        </section>
-
-        <!-- 最新信息页板块 -->
-        <section id="news" class="page-block">
-            <div class="container">
-                <h2 class="page-title">社团最新公开动态</h2>
-                <div class="news-wrap">
-                    <div class="news-card">
-                        <span class="news-time">2026-10-06</span>
-                        <p>社团新版官方博客站点正式上线，所有成员可使用分配的专属账号登录，查看个人通知与当月工作任务。</p>
-                    </div>
-                    <div class="news-card">
-                        <span class="news-time">2026-10-01</span>
-                        <p>2026年10月社费收缴相关规则正式发布，所有成员登录后可查阅个人通知了解对应权益与缴费要求。</p>
-                    </div>
+            
+            <div class="notification-area">
+                <h3><i class="fas fa-inbox"></i> 我的通知</h3>
+                <div id="notice-list" class="notice-stack">
+                    <!-- 通知由JS动态插入 -->
                 </div>
-            </div>
-        </section>
-
-        <!-- 个人通知面板 -->
-        <section id="personal-panel" class="page-block">
-            <div class="container">
-                <div class="panel-header">
-                    <h2 id="current-user-title"></h2>
-                    <button id="logout-btn" class="logout-btn">退出登录</button>
-                </div>
-                <div id="notice-display-area" class="notice-box"></div>
             </div>
         </section>
     </main>
 
-    <!-- 登录模态框 -->
-    <div id="login-modal" class="modal-wrap">
-        <div class="modal-inner">
-            <span class="modal-close">×</span>
-            <h3 class="modal-title">社团账号登录</h3>
-            <div class="login-form">
-                <div class="form-unit">
-                    <label for="input-username">用户名</label>
-                    <input type="text" id="input-username" placeholder="请输入你的社团用户名">
+    <!-- 登录模态框：极简设计 -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-card card">
+            <button class="close-modal">&times;</button>
+            <h3>成员登录</h3>
+            <p class="modal-desc">请输入您的社团分配账号</p>
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="username" placeholder="用户名" required>
                 </div>
-                <div class="form-unit">
-                    <label for="input-password">密码</label>
-                    <input type="password" id="input-password" placeholder="请输入你的账号密码">
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="密码" required>
                 </div>
-                <button id="confirm-login" class="login-submit">确认登录</button>
-            </div>
+                <button type="submit" class="btn-primary full-width">进入社团</button>
+            </form>
+            <p id="login-error" class="error-msg"></p>
         </div>
     </div>
+
+    <footer class="footer">
+        <p>&copy; 2026 NF 新自由民主社团. All Rights Reserved.</p>
+    </footer>
 
     <script src="./script.js"></script>
 </body>
