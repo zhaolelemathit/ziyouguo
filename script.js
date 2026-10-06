@@ -1,121 +1,135 @@
-// 数据持久化：从本地存储读取博客数据
-let blogList = JSON.parse(localStorage.getItem('nf_community_blogs')) || [];
+// 预定义全部用户账号与通知数据
+const userDatabase = {
+    tanshicheng: {
+        password: "tanshicheng0833",
+        name: "谈世承",
+        notices: [
+            "谈世承  请在看到此消息后到社长处领取社费 3 RMB 或 在商店购买双萃一瓶 并上交社费的 20% 用于公费，特殊情况请与社长商议。",
+            "你的10月工作任务是：管理新自由社的民风，含传谣等行为进行制止。"
+        ]
+    },
+    weiyeen: {
+        password: "weiyeen1322",
+        name: "魏也恩",
+        notices: [
+            "魏也恩 请在看到此消息后到社长处领取社费 1 RMB 或 在商店购买双萃一瓶 并上交社费的 20% 用于公费，特殊情况请与社长商议。",
+            "你的10月工作任务是：管理 wangjiaqi 和 chenjiajin，并让其发展新自由社团科技。"
+        ]
+    },
+    wangjiaqi: {
+        password: "wangjiaqi6837",
+        name: "王家齐",
+        notices: [
+            "王家齐 请在看到此消息后到社长处领取社费 1 RMB 或 在商店购买双萃一瓶 并上交社费的 20% 用于公费，特殊情况请与社长商议。",
+            "你的10月工作任务是：接收weiyeen的正当管理，管理新自由社铁路部门，并让绘制华特轨道交通线路图。具体绘制方式可用手绘制或电脑绘制，电脑绘制网页：https://railmapgen.github.io/rmp/。绘制完成可在右上角的导出图标中导出图片。"
+        ]
+    },
+    chenjiajin: {
+        password: "chenjiajin3352",
+        name: "陈家金",
+        notices: [
+            "陈家金 请在看到此消息后到社长处领取社费 1 RMB 或 在商店购买双萃一瓶 并上交社费的 20% 用于公费，特殊情况请与社长商议。",
+            "你的10月工作任务是：接收weiyeen的正当管理，并发展新自由社团科技。"
+        ]
+    },
+    zhanzirui: {
+        password: "zhanzirui9838",
+        name: "詹子睿",
+        notices: [
+            "詹子睿 请在看到此消息后到社长处领取社费 双萃一瓶 和 新制地铁路线图，特殊情况请与社长商议。",
+            "你的10月工作任务是：和社长一起绘制地铁路线图。"
+        ]
+    },
+    zhangchenming: {
+        password: "zhangchenming1983",
+        name: "张宸铭",
+        notices: [
+            "张宸铭 请在看到此消息后到社长处领取社费 1 RMB 或 在商店购买双萃一瓶 并上交社费的 20% 用于公费，特殊情况请与社长商议。",
+            "你的10月工作任务是：管理wangjiaqi。"
+        ]
+    },
+    zhoukaien: {
+        password: "zhoukaien5372",
+        name: "周凯恩",
+        notices: [
+            "周凯恩 请在看到此消息后到社长处领取社费 3 RMB 商店券，并上交社费的 20% 用于公费，特殊情况请与社长商议。",
+            "你的10月工作任务是：管理自新社星奇日报。"
+        ]
+    }
+};
 
-// 页面初始化
-document.addEventListener('DOMContentLoaded', () => {
-    renderAllBlogs();
-    updateBlogCount();
-    bindAllEvents();
+// 获取页面元素
+const navLinks = document.querySelectorAll('.nav-link');
+const pageSections = document.querySelectorAll('.page-section');
+const loginModal = document.getElementById('loginModal');
+const userArea = document.getElementById('userArea');
+const closeBtn = document.querySelector('.close-btn');
+const loginBtn = document.getElementById('loginBtn');
+const logoutBtn = document.getElementById('logoutBtn');
+const usernameInput = document.getElementById('usernameInput');
+const passwordInput = document.getElementById('passwordInput');
+const welcomeUser = document.getElementById('welcomeUser');
+const userNoticeBox = document.getElementById('userNoticeBox');
+
+let currentLoginUser = null;
+
+// 页面切换逻辑
+navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        const targetId = link.getAttribute('href').substring(1);
+        pageSections.forEach(section => {
+            section.classList.remove('active-section');
+            if(section.id === targetId) {
+                section.classList.add('active-section');
+            }
+        });
+    });
 });
 
-// 绑定所有交互事件
-function bindAllEvents() {
-    // 编辑器开关事件
-    document.getElementById('open-editor-btn').addEventListener('click', openBlogEditor);
-    document.getElementById('hero-editor-btn').addEventListener('click', openBlogEditor);
-    document.getElementById('close-editor-btn').addEventListener('click', closeBlogEditor);
-    document.getElementById('cancel-editor-btn').addEventListener('click', closeBlogEditor);
-    
-    // 编辑器工具栏事件
-    document.getElementById('btn-bold').addEventListener('click', () => document.execCommand('bold'));
-    document.getElementById('btn-italic').addEventListener('click', () => document.execCommand('italic'));
-    document.getElementById('btn-insert-img').addEventListener('click', insertBlogImage);
-    document.getElementById('btn-list').addEventListener('click', () => document.execCommand('insertUnorderedList'));
-    
-    // 保存博客事件
-    document.getElementById('save-blog-btn').addEventListener('click', saveBlogPost);
-}
+// 打开登录弹窗
+userArea.addEventListener('click', () => {
+    if(!currentLoginUser) loginModal.classList.add('show');
+});
 
-// 渲染所有博客卡片
-function renderAllBlogs() {
-    const container = document.getElementById('blog-container');
-    if (blogList.length === 0) {
-        container.innerHTML = `
-            <div class="col-span-full text-center py-16 text-gray-500">
-                <i class="fas fa-file-alt text-5xl mb-4 opacity-30"></i>
-                <p class="text-lg">暂无博客文章，点击上方按钮发布第一篇内容吧</p>
-            </div>
-        `;
-        return;
+// 关闭登录弹窗
+closeBtn.addEventListener('click', () => {
+    loginModal.classList.remove('show');
+});
+
+// 登录校验逻辑
+loginBtn.addEventListener('click', () => {
+    const inputUser = usernameInput.value.trim();
+    const inputPwd = passwordInput.value.trim();
+    if(userDatabase[inputUser] && userDatabase[inputUser].password === inputPwd) {
+        currentLoginUser = userDatabase[inputUser];
+        loginModal.classList.remove('show');
+        userArea.textContent = currentLoginUser.name;
+        // 加载用户个人通知
+        welcomeUser.textContent = `${currentLoginUser.name} 的个人通知中心`;
+        userNoticeBox.innerHTML = '';
+        currentLoginUser.notices.forEach(notice => {
+            const noticeEl = document.createElement('div');
+            noticeEl.className = 'notice-item';
+            noticeEl.textContent = notice;
+            userNoticeBox.appendChild(noticeEl);
+        });
+        // 跳转至个人通知页面
+        navLinks.forEach(l => l.classList.remove('active'));
+        pageSections.forEach(section => section.classList.remove('active-section'));
+        document.getElementById('personalPanel').classList.add('active-section');
+    } else {
+        alert('用户名或密码错误，请重新输入！');
     }
+});
 
-    container.innerHTML = blogList.map(blog => `
-        <div class="blog-card bg-white rounded-xl shadow-md overflow-hidden">
-            <img src="${blog.coverImg}" alt="文章封面" class="w-full h-48 object-cover">
-            <div class="p-6">
-                <h3 class="text-xl font-bold mb-3 text-gray-800 line-clamp-2">${blog.title}</h3>
-                <p class="text-gray-600 mb-4 line-clamp-3">${stripHtmlTags(blog.content)}</p>
-                <div class="flex justify-between items-center text-sm text-gray-500">
-                    <span><i class="fas fa-calendar-alt mr-1"></i> ${blog.publishDate}</span>
-                    <span><i class="fas fa-user mr-1"></i> ${blog.author}</span>
-                </div>
-            </div>
-        </div>
-    `).join('');
-}
-
-// 去除HTML标签，用于纯文本摘要展示
-function stripHtmlTags(html) {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
-}
-
-// 更新博客总数显示
-function updateBlogCount() {
-    document.getElementById('blog-count').textContent = blogList.length;
-}
-
-// 打开博客编辑器
-function openBlogEditor() {
-    document.getElementById('blog-editor-modal').classList.remove('hidden');
-}
-
-// 关闭博客编辑器
-function closeBlogEditor() {
-    document.getElementById('blog-editor-modal').classList.add('hidden');
-    // 清空编辑器内容
-    document.getElementById('blog-title').value = '';
-    document.getElementById('blog-content').innerHTML = '';
-}
-
-// 插入图片到编辑器
-function insertBlogImage() {
-    const imgUrl = prompt('请输入图片的URL地址：');
-    if (imgUrl && imgUrl.trim()) {
-        document.execCommand('insertHTML', false, `<img src="${imgUrl.trim()}" class="max-w-full my-4 rounded-lg shadow-sm">`);
-    }
-}
-
-// 保存并发布博客文章
-function saveBlogPost() {
-    const title = document.getElementById('blog-title').value.trim();
-    const content = document.getElementById('blog-content').innerHTML.trim();
-
-    if (!title || !content) {
-        alert('文章标题和内容不能为空，请补充完整后再发布');
-        return;
-    }
-
-    // 生成新的博客对象
-    const newBlog = {
-        id: Date.now(),
-        title: title,
-        content: content,
-        author: '社团成员',
-        publishDate: new Date().toLocaleDateString('zh-CN'),
-        // 生成随机封面图
-        coverImg: `https://picsum.photos/seed/${Date.now()}/600/300`
-    };
-
-    // 添加到博客列表头部
-    blogList.unshift(newBlog);
-    // 持久化保存到本地存储
-    localStorage.setItem('nf_community_blogs', JSON.stringify(blogList));
-    
-    // 刷新页面显示
-    renderAllBlogs();
-    updateBlogCount();
-    closeBlogEditor();
-    alert('文章发布成功！');
-}
+// 退出登录逻辑
+logoutBtn.addEventListener('click', () => {
+    currentLoginUser = null;
+    userArea.textContent = '登录';
+    usernameInput.value = '';
+    passwordInput.value = '';
+    // 跳转回首页
+    navLinks.click();
+});
