@@ -4,99 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NF新自由民主社团 - 官方博客站</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <!-- 顶部导航栏 -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <h1 class="logo">NF新自由民主社团</h1>
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link active">首页</a></li>
-                <li><a href="#articles" class="nav-link">文章页</a></li>
-                <li><a href="#news" class="nav-link">最新信息页</a></li>
-                <li id="userArea" class="nav-link">登录</li>
+    <nav class="site-navbar">
+        <div class="nav-wrap">
+            <div class="site-logo">NF新自由民主社团</div>
+            <ul class="nav-menu-list">
+                <li class="nav-item" data-target="home">首页</li>
+                <li class="nav-item" data-target="articles">文章页</li>
+                <li class="nav-item" data-target="news">最新信息页</li>
+                <li class="nav-item login-trigger">登录</li>
             </ul>
         </div>
     </nav>
 
-    <!-- 首页板块 -->
-    <section id="home" class="page-section active-section">
-        <div class="container">
-            <div class="welcome-card">
-                <h2>欢迎来到新自由民主社团（NF）！</h2>
-                <p>用户登录后查看各自信息和通知</p>
-                <div class="home-note">
-                    <p>社团铁路绘制工具：[Rail Map Painter](https://railmapgen.github.io/rmp/){target="_blank"}</p>
+    <main class="site-main">
+        <!-- 首页板块 -->
+        <section id="home" class="page-block active">
+            <div class="container">
+                <div class="welcome-card">
+                    <h2>欢迎来到新自由民主社团（NF）！</h2>
+                    <p class="welcome-tip">用户登录后即可查看个人专属信息与通知</p>
+                    <div class="tool-intro">
+                        <p>社团轨道交通线路绘制工具：<a href="https://railmapgen.github.io/rmp/" target="_blank" rel="noopener noreferrer">Rail Map Painter</a></p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 文章页板块 -->
-    <section id="articles" class="page-section">
-        <div class="container">
-            <h2>社团公开文章</h2>
-            <div class="article-list">
-                <div class="article-item">
-                    <h3>10月社团整体工作安排公示</h3>
-                    <p>本次10月社团各岗位分工已全部确认，所有成员可登录账号查看个人专属任务与待办通知。</p>
-                </div>
-                <div class="article-item">
-                    <h3>华特轨道交通线路绘制指南</h3>
-                    <p>参与铁路绘制工作的成员可通过Rail Map Painter工具完成线路创作，绘制完成后点击右上角导出图标即可导出成品图片。</p>
+        <!-- 文章页板块 -->
+        <section id="articles" class="page-block">
+            <div class="container">
+                <h2 class="page-title">社团公开文章专区</h2>
+                <div class="article-wrap">
+                    <div class="article-card">
+                        <h3>2026年10月社团整体工作安排公示</h3>
+                        <p>本次10月社团各成员岗位分工已全部确认完成，所有社团成员可通过个人专属账号登录站点，查看对应个人任务与待办通知。</p>
+                    </div>
+                    <div class="article-card">
+                        <h3>华特轨道交通线路图绘制操作指南</h3>
+                        <p>参与铁路绘制工作的成员可使用Rail Map Painter工具完成线路创作，绘制结束后点击页面右上角导出图标，即可直接导出成品线路图片完成提交。</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 最新信息页板块 -->
-    <section id="news" class="page-section">
-        <div class="container">
-            <h2>社团最新公开动态</h2>
-            <div class="news-list">
-                <div class="news-item">
-                    <span class="news-date">2026-10-06</span>
-                    <p>社团新版博客站点正式上线，所有成员可通过专属账号登录查看个人通知与工作任务。</p>
-                </div>
-                <div class="news-item">
-                    <span class="news-date">2026-10-01</span>
-                    <p>10月社费收缴相关规则正式发布，所有成员可查阅个人通知了解对应要求。</p>
+        <!-- 最新信息页板块 -->
+        <section id="news" class="page-block">
+            <div class="container">
+                <h2 class="page-title">社团最新公开动态</h2>
+                <div class="news-wrap">
+                    <div class="news-card">
+                        <span class="news-time">2026-10-06</span>
+                        <p>社团新版官方博客站点正式上线，所有成员可使用分配的专属账号登录，查看个人通知与当月工作任务。</p>
+                    </div>
+                    <div class="news-card">
+                        <span class="news-time">2026-10-01</span>
+                        <p>2026年10月社费收缴相关规则正式发布，所有成员登录后可查阅个人通知了解对应权益与缴费要求。</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- 登录弹窗 -->
-    <div id="loginModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3>账号登录</h3>
+        <!-- 个人通知面板 -->
+        <section id="personal-panel" class="page-block">
+            <div class="container">
+                <div class="panel-header">
+                    <h2 id="current-user-title"></h2>
+                    <button id="logout-btn" class="logout-btn">退出登录</button>
+                </div>
+                <div id="notice-display-area" class="notice-box"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="modal-wrap">
+        <div class="modal-inner">
+            <span class="modal-close">×</span>
+            <h3 class="modal-title">社团账号登录</h3>
             <div class="login-form">
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input type="text" id="usernameInput" placeholder="请输入用户名">
+                <div class="form-unit">
+                    <label for="input-username">用户名</label>
+                    <input type="text" id="input-username" placeholder="请输入你的社团用户名">
                 </div>
-                <div class="form-group">
-                    <label>密码</label>
-                    <input type="password" id="passwordInput" placeholder="请输入密码">
+                <div class="form-unit">
+                    <label for="input-password">密码</label>
+                    <input type="password" id="input-password" placeholder="请输入你的账号密码">
                 </div>
-                <button id="loginBtn">确认登录</button>
+                <button id="confirm-login" class="login-submit">确认登录</button>
             </div>
         </div>
     </div>
 
-    <!-- 个人通知面板 -->
-    <div id="personalPanel" class="page-section">
-        <div class="container">
-            <div class="panel-header">
-                <h2 id="welcomeUser"></h2>
-                <button id="logoutBtn">退出登录</button>
-            </div>
-            <div id="userNoticeBox" class="notice-container"></div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="./script.js"></script>
 </body>
 </html>
